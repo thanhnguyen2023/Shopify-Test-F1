@@ -1,0 +1,30 @@
+{% comment %}
+  Snippet: quick-add-button.liquid
+  Đầu vào (Accepts):
+  - product: Dữ liệu của 1 sản phẩm (Product Liquid object)
+{% endcomment %}
+
+<div class="quick-add-wrapper" style="margin-top: 15px; width: 100%;">
+  {% if product.available %}
+    <!-- Form thêm vào giỏ hàng cơ bản của Shopify -->
+    <form method="post" action="/cart/add">
+      <!-- Bắt buộc phải có ID của biến thể (variant) để Shopify biết đang thêm cái gì -->
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+      <button
+        type="submit"
+        style="background-color: #121212; color: #ffffff; border: none; padding: 10px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: 600; transition: opacity 0.2s;"
+      >
+        Thêm vào giỏ hàng
+      </button>
+    </form>
+  {% else %}
+    <!-- Hiển thị nút mờ đi nếu sản phẩm hết hàng -->
+    <button
+      disabled
+      style="background-color: #e0e0e0; color: #888888; border: none; padding: 10px; border-radius: 4px; width: 100%; cursor: not-allowed; font-weight: 600;"
+    >
+      Hết hàng
+    </button>
+  {% endif %}
+</div>

@@ -1,52 +1,234 @@
-<div class="page-width" style="padding: 40px 0;">
-  <h2 style="text-align: center;">{{ section.settings.custom_title }}</h2>
 
-  <div class="product-list-container">
-    <ul style="list-style: none; padding: 0;">
-      {% for product in section.settings.selected_collection.products %}
-        <li style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px;">
-          <h3>{{ product.title }}</h3>
+{%- style -%}
+  .custom-collection-grid-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
 
-          <p>
-            Giá bán: {{ product.price | money }}
+  .custom-collection-grid__heading-{{ section.id }} {
+    text-align: center;
+    color: {{ section.settings.heading_color }};
+    font-size: {{ section.settings.heading_size }}px;
+    margin-top: 0;
+    margin-bottom: 2rem;
+  }
 
-            {% if product.compare_at_price > product.price %}
-              <span style="background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 4px; margin-left: 10px;"
-                >Sale</span
-              >
-              <span style="text-decoration: line-through; color: #7f8c8d; margin-left: 10px;">
-                {{- product.compare_at_price | money -}}
-              </span>
+  .custom-collection-grid__product-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.products_per_row }}, 1fr);
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .custom-collection-grid__product-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .product-card {
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+  }
+
+  .product-card__image-wrapper {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #f8f8f8;
+  }
+
+  .product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .product-card__info {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .product-card__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: #333;
+  }
+
+  .product-card__price-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .product-card__price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #d22d2d;
+  }
+
+  .product-card__price--compare {
+    color: #888;
+    text-decoration: line-through;
+    font-size: 1rem;
+  }
+
+  .product-card__sale-badge {
+    background-color: {{ section.settings.sale_badge_color }};
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+{%- endstyle -%}
+
+<div class="page-width custom-collection-grid-{{ section.id }}">
+  
+  <h2 class="custom-collection-grid__heading-{{ section.id }}">{{ section.settings.heading }}</h2>
+
+  {% assign selected_collection = section.settings.my_collection %}
+  
+  {% if selected_collection != blank %}
+    <ul class="custom-collection-grid__product-grid">
+      {% for product in selected_collection.products limit: section.settings.product_limit %}
+        <li class="product-card">
+          
+          <div class="product-card__image-wrapper">
+            {% if product.featured_image %}
+              {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'product-card__image', alt: product.title }}
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'product-card__image' }}
             {% endif %}
-          </p>
+          </div>
+          
+          <div class="product-card__info">
+            <!-- Tên sản phẩm -->
+            <h3 class="product-card__title">{{ product.title }}</h3>
+            
+            <!-- Giá và logic badge Sale -->
+            <div class="product-card__price-wrapper">
+              <span class="product-card__price">{{ product.price | money_with_currency }}</span>
+              
+              <!-- YÊU CẦU 3: Dùng IF để ẩn/hiện badge Sale -->
+              {% if product.compare_at_price > product.price %}
+                <span class="product-card__price--compare">{{ product.compare_at_price | money_with_currency }}</span>
+                <span class="product-card__sale-badge">Sale</span>
+              {% endif %}
+            </div>
+
+            {% render 'quick-add-button', product: product %}
+          </div>
+          
         </li>
       {% else %}
-        <p>Vui lòng chọn Collection trong Theme Editor.</p>
+        <li>Collection này chưa có sản phẩm nào.</li>
       {% endfor %}
     </ul>
-  </div>
+  {% else %}
+    <p class="text-center"><em>Vui lòng chọn một Collection trong cài đặt bên phải để hiển thị sản phẩm.</em></p>
+  {% endif %}
+
 </div>
 
 {% schema %}
 {
-  "name": "Custom Product List",
+  "name": "Custom Collection Grid",
+  "tag": "section",
+  "class": "section",
   "settings": [
     {
       "type": "text",
-      "id": "custom_title",
-      "label": "Tiêu đề Section",
-      "default": "Sản phẩm nổi bật của chúng tôi"
+      "id": "heading",
+      "label": "Tiêu đề",
+      "default": "Sản phẩm Mới"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Màu tiêu đề",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Kích thước tiêu đề",
+      "min": 16,
+      "max": 64,
+      "step": 2,
+      "default": 32,
+      "unit": "px"
     },
     {
       "type": "collection",
-      "id": "selected_collection",
-      "label": "Chọn bộ sưu tập để hiển thị"
+      "id": "my_collection",
+      "label": "Chọn Collection"
+    },
+    {
+      "type": "number",
+      "id": "product_limit",
+      "label": "Số lượng sản phẩm hiển thị tối đa",
+      "default": 12
+    },
+    {
+      "type": "number",
+      "id": "products_per_row",
+      "label": "Số sản phẩm mỗi hàng (Desktop)",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_color",
+      "label": "Màu Badge Sale",
+      "default": "#d22d2d"
+    },
+    {
+      "type": "header",
+      "content": "Khoảng cách (Padding)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Trên",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Dưới",
+      "default": 36
     }
   ],
   "presets": [
     {
-      "name": "Custom Product List",
-      "category": "Custom"
+      "name": "Custom Collection Grid",
+      "settings": {
+        "heading": "Hàng Mới Về",
+        "products_per_row": 3,
+        "product_limit": 6
+      }
     }
   ]
 }
