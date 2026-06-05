@@ -15,7 +15,7 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Image banner",
+            "heading": "Web",
             "heading_size": "h0"
           }
         },
@@ -44,10 +44,11 @@
         "button"
       ],
       "settings": {
+        "image": "shopify://shop_images/Minecraft_Free_Download.jpg",
         "image_overlay_opacity": 40,
         "image_height": "large",
         "image_behavior": "none",
-        "desktop_content_position": "bottom-center",
+        "desktop_content_position": "middle-center",
         "desktop_content_alignment": "center",
         "show_text_box": false,
         "color_scheme": "scheme-3",
@@ -58,10 +59,20 @@
     },
     "custom_product_list_bz8Ud7": {
       "type": "custom-product-list",
+      "custom_css": [
+        "h2 {}"
+      ],
       "name": "Custom Product List",
       "settings": {
-        "custom_title": "New Product",
-        "selected_collection": "hydrogen"
+        "heading": "Sản phẩm Mới",
+        "heading_color": "#333333",
+        "heading_size": 32,
+        "my_collection": "automated-collection",
+        "product_limit": 12,
+        "products_per_row": 3,
+        "sale_badge_color": "#d22d2d",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "rich_text_KETQBK": {
