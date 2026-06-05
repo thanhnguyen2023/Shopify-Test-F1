@@ -1,0 +1,53 @@
+<div class="page-width" style="padding: 40px 0;">
+  <h2 style="text-align: center;">{{ section.settings.custom_title }}</h2>
+
+  <div class="product-list-container">
+    <ul style="list-style: none; padding: 0;">
+      {% for product in section.settings.selected_collection.products %}
+        <li style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px;">
+          <h3>{{ product.title }}</h3>
+
+          <p>
+            Giá bán: {{ product.price | money }}
+
+            {% if product.compare_at_price > product.price %}
+              <span style="background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 4px; margin-left: 10px;"
+                >Sale</span
+              >
+              <span style="text-decoration: line-through; color: #7f8c8d; margin-left: 10px;">
+                {{- product.compare_at_price | money -}}
+              </span>
+            {% endif %}
+          </p>
+        </li>
+      {% else %}
+        <p>Vui lòng chọn Collection trong Theme Editor.</p>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Product List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_title",
+      "label": "Tiêu đề Section",
+      "default": "Sản phẩm nổi bật của chúng tôi"
+    },
+    {
+      "type": "collection",
+      "id": "selected_collection",
+      "label": "Chọn bộ sưu tập để hiển thị"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product List",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
