@@ -1,0 +1,652 @@
+{% comment %}
+  Section: Nova – Collections Grid
+  Design: Nova Web UI – Collections (node 4009:410)
+  Layout:
+    Left col  → 2 small collection cards (top) + description + CTA button (bottom)
+    Right col → 1 tall collection card (full height)
+{% endcomment %}
+
+{%- liquid
+  assign section_id = 'nova-collections-' | append: section.id
+
+  assign small_blocks = section.blocks | where: 'type', 'collection_card_small'
+  assign tall_block = section.blocks | where: 'type', 'collection_card_tall' | first
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="nova-col"
+  style="
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    border-top: 1px solid {{ section.settings.border_color }};
+    border-bottom: 1px solid {{ section.settings.border_color }};
+  "
+>
+  <div class="nova-col__inner{% unless section.settings.full_width %} page-width{% endunless %}">
+    {%- comment %} ── Section heading ── {%- endcomment %}
+    <h2 class="nova-col__heading" style="color: {{ section.settings.heading_color }};">
+      <span class="nova-col__heading-regular">{{ section.settings.heading_plain | default: 'Our' }} </span>
+      <span class="nova-col__heading-italic">{{ section.settings.heading_italic | default: 'Collections' }}</span>
+    </h2>
+
+    {%- comment %} ── Collections grid ── {%- endcomment %}
+    <div class="nova-col__grid">
+      {%- comment %} LEFT COLUMN: two small cards + description + CTA {%- endcomment %}
+      <div class="nova-col__left">
+        {%- comment %} Two small cards side by side {%- endcomment %}
+        <div class="nova-col__small-cards">
+          {%- for block in small_blocks limit: 2 -%}
+            {%- liquid
+              assign coll = block.settings.collection
+            -%}
+            <div class="nova-col__card nova-col__card--small" {{ block.shopify_attributes }}>
+              <a
+                class="nova-col__card-img-link"
+                href="{% if coll != blank %}{{ coll.url }}{% else %}{{ block.settings.card_url | default: '#' }}{% endif %}"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                <div class="nova-col__card-img-wrap nova-col__card-img-wrap--small">
+                  {%- if block.settings.image != blank -%}
+                    {%- assign small_card_alt = block.settings.image.alt
+                      | default: block.settings.card_title
+                      | escape
+                    -%}
+                    {{
+                      block.settings.image
+                      | image_url: width: 800
+                      | image_tag:
+                        loading: 'lazy',
+                        class: 'nova-col__card-img',
+                        alt: small_card_alt,
+                        widths: '300, 500, 700, 900'
+                    }}
+                  {%- elsif coll != blank and coll.image != blank -%}
+                    {%- assign coll_featured_alt = coll.title | escape -%}
+                    {{
+                      coll.image
+                      | image_url: width: 800
+                      | image_tag:
+                        loading: 'lazy',
+                        class: 'nova-col__card-img',
+                        alt: coll_featured_alt,
+                        widths: '300, 500, 700, 900'
+                    }}
+                  {%- else -%}
+                    {{
+                      'collection-'
+                      | append: forloop.index
+                      | placeholder_svg_tag: 'nova-col__card-img nova-col__card-img--placeholder'
+                    }}
+                  {%- endif -%}
+                </div>
+              </a>
+              <div class="nova-col__card-info">
+                <p class="nova-col__card-label" style="color: {{ section.settings.label_color }};">
+                  {{ block.settings.label | default: 'COLLECTION' | upcase }}
+                </p>
+                <a
+                  class="nova-col__card-title"
+                  href="{% if coll != blank %}{{ coll.url }}{% else %}{{ block.settings.card_url | default: '#' }}{% endif %}"
+                  style="color: {{ section.settings.heading_color }};"
+                >
+                  {{ block.settings.card_title | default: coll.title | default: 'Collection Name' }}
+                </a>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- comment %} Description + CTA ── always at bottom of left col {%- endcomment %}
+        <div class="nova-col__desc">
+          {%- if section.settings.description != blank -%}
+            <p class="nova-col__desc-text" style="color: {{ section.settings.label_color }};">
+              {{ section.settings.description }}
+            </p>
+          {%- endif -%}
+
+          {%- if section.settings.btn_label != blank -%}
+            <a
+              href="{{ section.settings.btn_url | default: '/collections' }}"
+              class="nova-col__btn"
+              style="
+                background-color: {{ section.settings.btn_bg_color }};
+                color: {{ section.settings.btn_text_color }};
+              "
+            >
+              <span>{{ section.settings.btn_label }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment %} RIGHT COLUMN: one tall card {%- endcomment %}
+      {%- if tall_block != blank -%}
+        {%- liquid
+          assign tall_coll = tall_block.settings.collection
+        -%}
+        <div class="nova-col__card nova-col__card--tall" {{ tall_block.shopify_attributes }}>
+          <a
+            class="nova-col__card-img-link"
+            href="{% if tall_coll != blank %}{{ tall_coll.url }}{% else %}{{ tall_block.settings.card_url | default: '#' }}{% endif %}"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <div class="nova-col__card-img-wrap nova-col__card-img-wrap--tall">
+              {%- if tall_block.settings.image != blank -%}
+                {%- assign tall_card_alt = tall_block.settings.image.alt
+                  | default: tall_block.settings.card_title
+                  | escape
+                -%}
+                {{
+                  tall_block.settings.image
+                  | image_url: width: 1400
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'nova-col__card-img',
+                    alt: tall_card_alt,
+                    widths: '500, 700, 900, 1200, 1400'
+                }}
+              {%- elsif tall_coll != blank and tall_coll.image != blank -%}
+                {%- assign tall_coll_alt = tall_coll.title | escape -%}
+                {{
+                  tall_coll.image
+                  | image_url: width: 1400
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'nova-col__card-img',
+                    alt: tall_coll_alt,
+                    widths: '500, 700, 900, 1200, 1400'
+                }}
+              {%- else -%}
+                {{ 'collection-3' | placeholder_svg_tag: 'nova-col__card-img nova-col__card-img--placeholder' }}
+              {%- endif -%}
+            </div>
+          </a>
+          <div class="nova-col__card-info">
+            <p class="nova-col__card-label" style="color: {{ section.settings.label_color }};">
+              {{ tall_block.settings.label | default: 'COLLECTION' | upcase }}
+            </p>
+            <a
+              class="nova-col__card-title"
+              href="{% if tall_coll != blank %}{{ tall_coll.url }}{% else %}{{ tall_block.settings.card_url | default: '#' }}{% endif %}"
+              style="color: {{ section.settings.heading_color }};"
+            >
+              {{ tall_block.settings.card_title | default: tall_coll.title | default: 'Collection Name' }}
+            </a>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+    {%- comment %} /.nova-col__grid {%- endcomment %}
+  </div>
+</section>
+
+<style>
+  /* ── Tokens ── */
+  #{{ section_id }} {
+    --nova-col-heading:   {{ section.settings.heading_color }};
+    --nova-col-label:     {{ section.settings.label_color }};
+    --nova-col-btn-bg:    {{ section.settings.btn_bg_color }};
+    --nova-col-btn-text:  {{ section.settings.btn_text_color }};
+    --nova-col-gap:       24px;
+    --nova-col-img-small: {{ section.settings.small_card_height }}px;
+  }
+
+  /* ── Shell ── */
+  .nova-col {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .nova-col__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* ── Heading ── */
+  .nova-col__heading {
+    font-size: clamp(40px, 5.5vw, 80px);
+    line-height: 1.2;
+    margin: 0;
+    color: var(--nova-col-heading);
+  }
+
+  .nova-col__heading-regular {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .nova-col__heading-italic {
+    font-family: 'Didot', 'Times New Roman', serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  /* ── Main grid ── */
+  .nova-col__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--nova-col-gap);
+    align-items: stretch;
+  }
+
+  /* ── Left column ── */
+  .nova-col__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+    height: 100%;
+  }
+
+  /* ── Small cards row ── */
+  .nova-col__small-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--nova-col-gap);
+  }
+
+
+  /* ── Card shared ── */
+  .nova-col__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-col-gap);
+  }
+
+  .nova-col__card-img-link {
+    display: block;
+    overflow: hidden;
+  }
+
+  .nova-col__card-img-wrap {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .nova-col__card-img-wrap--small {
+    height: var(--nova-col-img-small);
+  }
+
+  .nova-col__card-img-wrap--tall {
+    /* Tall card matches the full left-column height */
+    height: 100%;
+    min-height: 600px;
+  }
+
+  .nova-col__card--tall {
+    height: 100%;
+  }
+
+  .nova-col__card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .nova-col__card-img--placeholder {
+    background: #e7e3da;
+  }
+
+  .nova-col__card-img-link:hover .nova-col__card-img {
+    transform: scale(1.03);
+  }
+
+  /* ── Card info ── */
+  .nova-col__card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nova-col__card-label {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--nova-col-label);
+    margin: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .nova-col__card-title {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--nova-col-heading);
+    text-decoration: none;
+    margin: 0;
+    display: block;
+  }
+
+  .nova-col__card-title:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── Description + CTA ── */
+  .nova-col__desc {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: flex-start;
+    max-width: 437px;
+  }
+
+  .nova-col__desc-text {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--nova-col-label);
+    margin: 0;
+  }
+
+  .nova-col__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: var(--nova-col-btn-bg);
+    color: var(--nova-col-btn-text);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .nova-col__btn:hover {
+    opacity: 0.85;
+  }
+
+  .nova-col__btn svg {
+    flex-shrink: 0;
+  }
+
+  /* ── Tall card image fill ── */
+  .nova-col__card--tall .nova-col__card-img-wrap--tall {
+    flex: 1 0 0;
+    min-height: 0;
+  }
+
+  .nova-col__card--tall {
+    height: 100%;
+  }
+
+  /* ── Responsive ── */
+  @media screen and (max-width: 1024px) {
+    .nova-col__grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .nova-col__card--tall .nova-col__card-img-wrap--tall {
+      height: 500px;
+      min-height: unset;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    .nova-col__inner {
+      padding-left: 20px;
+      padding-right: 20px;
+      gap: 40px;
+    }
+
+    .nova-col__small-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .nova-col__card--tall .nova-col__card-img-wrap--tall {
+      height: 380px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom Our Collection",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full page width",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "small_card_height",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Small card image height",
+      "default": 380
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f5f1ea"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Top / bottom border",
+      "default": "#e7e7e7"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading & title color",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label & description color",
+      "default": "#959595"
+    },
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "text",
+      "id": "heading_plain",
+      "label": "Heading – plain word",
+      "default": "Our"
+    },
+    {
+      "type": "text",
+      "id": "heading_italic",
+      "label": "Heading – italic word (Didot)",
+      "default": "Collections"
+    },
+    {
+      "type": "header",
+      "content": "Description & CTA"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description text",
+      "default": "Explore our signature styles — from timeless essentials to bold seasonal statements."
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button label",
+      "default": "SEE ALL"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button background",
+      "default": "#08254f"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_card_small",
+      "name": "Card Small",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Picks URL & featured image automatically."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Override image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label (e.g. COLLECTION)",
+          "default": "COLLECTION"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Card title override",
+          "info": "Leave blank to use collection title."
+        },
+        {
+          "type": "url",
+          "id": "card_url",
+          "label": "URL override",
+          "info": "Leave blank to use collection URL."
+        }
+      ]
+    },
+    {
+      "type": "collection_card_tall",
+      "name": "Card Tall",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Picks URL & featured image automatically."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Override image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label (e.g. COLLECTION)",
+          "default": "COLLECTION"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Card title override",
+          "info": "Leave blank to use collection title."
+        },
+        {
+          "type": "url",
+          "id": "card_url",
+          "label": "URL override",
+          "info": "Leave blank to use collection URL."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Our Collection",
+      "blocks": [
+        { "type": "collection_card_small" },
+        { "type": "collection_card_small" },
+        { "type": "collection_card_tall" }
+      ]
+    }
+  ]
+}
+{% endschema %}

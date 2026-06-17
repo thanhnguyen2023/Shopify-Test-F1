@@ -11,32 +11,19 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
-    "announcement-bar": {
-      "type": "announcement-bar",
-      "blocks": {
-        "announcement-bar-0": {
-          "type": "announcement",
-          "settings": {
-            "text": "Welcome to our store",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "announcement-bar-0"
-      ],
+    "custom_top_nav_gRYr8A": {
+      "type": "custom-top-nav",
+      "name": "Custom Top Nav",
       "settings": {
-        "auto_rotate": false,
-        "change_slides_speed": 5,
-        "color_scheme": "",
-        "show_line_separator": true,
-        "show_social": false,
-        "enable_country_selector": false,
-        "enable_language_selector": false
+        "bg_color": "#002447",
+        "text_color": "#ffffff",
+        "text_left": "<p>Hotline: +123 456 789</p>",
+        "text_right": "<p>Sign up to get 20% OFF for your first order</p>"
       }
     },
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
@@ -44,19 +31,96 @@
         "menu_type_desktop": "dropdown",
         "sticky_header_type": "on-scroll-up",
         "show_line_separator": true,
-        "color_scheme": "scheme-4",
+        "color_scheme": "scheme-1",
         "menu_color_scheme": "",
         "enable_country_selector": true,
-        "enable_language_selector": true,
+        "enable_language_selector": false,
         "enable_customer_avatar": true,
         "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "custom_navigation_xHt8Nn": {
+      "type": "custom-navigation",
+      "blocks": {
+        "menu_item_mBcFQz": {
+          "type": "menu_item",
+          "settings": {
+            "label": "Home",
+            "url": "/",
+            "is_active": true,
+            "submenu": ""
+          }
+        },
+        "menu_item_VRMxJM": {
+          "type": "menu_item",
+          "settings": {
+            "label": "Products",
+            "url": "/collections/all",
+            "is_active": false,
+            "submenu": ""
+          }
+        },
+        "menu_item_qWhzeQ": {
+          "type": "menu_item",
+          "settings": {
+            "label": "About",
+            "url": "/pages/about",
+            "is_active": false,
+            "submenu": ""
+          }
+        },
+        "menu_item_VpD4zF": {
+          "type": "menu_item",
+          "settings": {
+            "label": "Blogs",
+            "url": "/blogs/news",
+            "is_active": false,
+            "submenu": ""
+          }
+        }
+      },
+      "block_order": [
+        "menu_item_mBcFQz",
+        "menu_item_VRMxJM",
+        "menu_item_qWhzeQ",
+        "menu_item_VpD4zF"
+      ],
+      "name": "Navigation Bar",
+      "settings": {
+        "page_width": 1400,
+        "horizontal_padding": 40,
+        "header_position": "sticky",
+        "background_color": "#fdf8f2",
+        "border_color": "#e7e7e7",
+        "nav_color_active": "#1d1d1d",
+        "nav_color_inactive": "#959595",
+        "icon_color": "#1d1d1d",
+        "logo_image_width": 160,
+        "logo_text": ".NOVA STUDIO",
+        "logo_color": "#0a0a0a",
+        "logo_font_size": 24,
+        "nav_font_size": 16,
+        "show_search": true,
+        "hide_search_mobile": false,
+        "show_cart": true,
+        "show_auth_buttons": true,
+        "login_label": "LOG IN",
+        "signup_label": "SIGN UP",
+        "account_label": "ACCOUNT",
+        "logout_label": "LOG OUT",
+        "login_color": "#08254f",
+        "signup_bg_color": "#08254f",
+        "signup_text_color": "#ffffff",
+        "button_padding_v": 12,
+        "button_padding_h": 20
       }
     }
   },
   "order": [
-    "announcement-bar",
-    "header"
+    "custom_top_nav_gRYr8A",
+    "header",
+    "custom_navigation_xHt8Nn"
   ]
 }

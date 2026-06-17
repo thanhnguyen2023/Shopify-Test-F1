@@ -9,119 +9,178 @@
  */
 {
   "sections": {
+    "custom_hero_section_jDgiUT": {
+      "type": "custom-hero-section",
+      "name": "Custom Rich Text",
+      "settings": {
+        "bg_color": "#fdf8f2",
+        "heading": "<p>Where <em>Minimalism</em><br/>Meets Confidence</p>",
+        "heading_size_desktop": 100,
+        "heading_size_mobile": 36,
+        "description": "<p>Explore and discover the latest trends in our exclusive range of products.</p>",
+        "btn_label": "SHOP NOW",
+        "btn_link": "",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
     "image_banner": {
       "type": "image-banner",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Web",
-            "heading_size": "h0"
-          }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "Give customers details about the banner image(s) or content on the template.",
-            "text_style": "body"
-          }
-        },
-        "button": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading",
-        "text",
-        "button"
-      ],
       "settings": {
-        "image": "shopify://shop_images/Minecraft_Free_Download.jpg",
-        "image_overlay_opacity": 40,
-        "image_height": "large",
+        "image": "shopify://shop_images/c7779adb379bd295c215a305da265f50dc84d384.png",
+        "image_overlay_opacity": 0,
+        "image_height": "adapt",
         "image_behavior": "none",
-        "desktop_content_position": "middle-center",
+        "desktop_content_position": "top-center",
         "desktop_content_alignment": "center",
         "show_text_box": false,
-        "color_scheme": "scheme-3",
+        "color_scheme": "scheme-1",
         "stack_images_on_mobile": false,
         "mobile_content_alignment": "center",
         "show_text_below": false
       }
     },
-    "custom_product_list_bz8Ud7": {
-      "type": "custom-product-list",
-      "custom_css": [
-        "h2 {}"
-      ],
-      "name": "Custom Product List",
-      "settings": {
-        "heading": "Sản phẩm Mới",
-        "heading_color": "#333333",
-        "heading_size": 32,
-        "my_collection": "automated-collection",
-        "product_limit": 12,
-        "products_per_row": 3,
-        "sale_badge_color": "#d22d2d",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "rich_text_KETQBK": {
-      "type": "rich-text",
+    "custom_tab_collections_iUhQna": {
+      "type": "custom-tab-collections",
       "blocks": {
-        "heading_TPaRJh": {
-          "type": "heading",
+        "tab_HydTUH": {
+          "type": "tab",
           "settings": {
-            "heading": "Talk about your brand",
-            "heading_size": "h1"
+            "collection": "top",
+            "label": "Tops"
           }
         },
-        "text_dwkKPY": {
-          "type": "text",
+        "tab_yhmpcK": {
+          "type": "tab",
           "settings": {
-            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+            "collection": "bottoms",
+            "label": "Bottoms"
           }
         },
-        "button_dX43hm": {
-          "type": "button",
+        "tab_nhFjLE": {
+          "type": "tab",
           "settings": {
-            "button_label": "Button label",
-            "button_link": "",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "collection": "accessories",
+            "label": "Accessories"
+          }
+        },
+        "tab_akM8Ht": {
+          "type": "tab",
+          "settings": {
+            "collection": "shoes",
+            "label": "Shoes"
           }
         }
       },
       "block_order": [
-        "heading_TPaRJh",
-        "text_dwkKPY",
-        "button_dX43hm"
+        "tab_HydTUH",
+        "tab_yhmpcK",
+        "tab_nhFjLE",
+        "tab_akM8Ht"
       ],
-      "name": "t:sections.rich-text.presets.name",
+      "name": "Best Sellers",
       "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 52
+        "heading": "Best Sellers",
+        "subheading": "From timeless essentials to standout pieces, explore the styles our customers return to again and again. Effortless elegance, curated for everyday sophistication.",
+        "all_tab_label": "ALL PRODUCTS",
+        "default_collection": "new-product",
+        "products_limit": 6,
+        "show_cta_button": true,
+        "cta_label": "VIEW ALL PRODUCTS",
+        "cta_collection": "",
+        "background_color": "#fdf8f2",
+        "text_primary_color": "#0a0a0a",
+        "text_secondary_color": "#959595",
+        "accent_color": "#08254f",
+        "accent_text_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "card_image_height": 490
+      }
+    },
+    "custom_highlight_editorial_xNPr48": {
+      "type": "custom-highlight-editorial",
+      "name": "Custom Highlight",
+      "settings": {
+        "heading_regular": "Elevating Every",
+        "heading_italic": "Elegance",
+        "image_center": "shopify://shop_images/5a851a0b9efd33bd21e3f200c8f26d08bed41593.png",
+        "image_right": "shopify://shop_images/0bc6e62cae2f89635ec209b97a48c82598fb1461.png",
+        "image_bottom_left": "shopify://shop_images/9344ad8c6f2a8619d2dfa96d64398d2399235e34.png",
+        "left_title_regular": "",
+        "left_title_italic": "Highlights",
+        "left_description": "Discover statement pieces that redefine versatility — from flowing silhouettes to structured essentials, each design is crafted for effortless style.",
+        "right_title_regular": "Design",
+        "right_title_italic": "Philosophy",
+        "right_description": "NOVA STUDIO embraces timeless minimalism, blending refined tailoring with modern femininity to create pieces that transcend seasons.",
+        "show_button": true,
+        "button_label": "LEARN MORE",
+        "button_url": "",
+        "background_color": "#f3e9dc",
+        "text_primary_color": "#0a0a0a",
+        "text_secondary_color": "#959595",
+        "accent_color": "#08254f",
+        "accent_text_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "custom_about_section_z78Q6R": {
+      "type": "custom-about-section",
+      "name": "Custom About Section",
+      "settings": {
+        "full_width": false,
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "image_height": 400,
+        "background_color": "#f5f1ea",
+        "heading_color": "#0a0a0a",
+        "subheading_color": "#959595",
+        "divider_color": "#e7e3da",
+        "heading": "Designed for <em>real life</em> — and <em>real women</em>.",
+        "subheading": "NOVA Studio creates minimalist, elegant fashion designed for real women, celebrating their beauty and individuality in everyday life.",
+        "image_1": "shopify://shop_images/0bc6e62cae2f89635ec209b97a48c82598fb1461.png",
+        "image_2": "shopify://shop_images/9d2b81ba966a5bc91ef3b15a2ff25a425bd13a8b.png",
+        "image_3": "shopify://shop_images/e0009e6f75ef004fb38cf14fea702e9ccf44e26a.png",
+        "footer_title": "About Us",
+        "footer_text": "At NOVA Studio, we pride ourselves on crafting minimalist and elegant fashion that is thoughtfully designed for the realities of everyday life. Our collections are tailored specifically for real women, celebrating their unique beauty and individuality.",
+        "button_label": "LEARN MORE",
+        "button_url": "",
+        "button_bg_color": "#08254f",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "custom_style_club_QVXBqK": {
+      "type": "custom-style-club",
+      "name": "Custom Style Club",
+      "settings": {
+        "section_height": 800,
+        "padding_top": 160,
+        "padding_bottom": 160,
+        "bg_image": "shopify://shop_images/1050102bd54cb793933847313ea1e2b6cc9f837b.png",
+        "overlay_opacity": 100,
+        "overlay_fade": 50,
+        "heading_italic": "Join",
+        "heading_rest": "Our Style Club",
+        "subheading": "Unlock exclusive perks, early access to launches, and special birthday surprises.",
+        "text_color": "#ffffff",
+        "input_placeholder": "Enter your Email",
+        "input_border_color": "#e7e7e7",
+        "input_text_color": "#0a0a0a",
+        "btn_label": "SUBSCRIBE",
+        "btn_bg_color": "#ffffff",
+        "btn_text_color": "#08254f",
+        "customer_tag": "newsletter-style-club",
+        "success_message": "Thank you for subscribing!"
       }
     }
   },
   "order": [
+    "custom_hero_section_jDgiUT",
     "image_banner",
-    "custom_product_list_bz8Ud7",
-    "rich_text_KETQBK"
+    "custom_tab_collections_iUhQna",
+    "custom_highlight_editorial_xNPr48",
+    "custom_about_section_z78Q6R",
+    "custom_style_club_QVXBqK"
   ]
 }

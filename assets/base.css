@@ -1,3 +1,27 @@
+@font-face {
+  font-family: 'Satoshi';
+  src: url('{{ "Satoshi-Medium.woff2" | asset_url }}') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('{{ "Satoshi-Regular.woff2" | asset_url }}') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('{{ "Satoshi-Light.woff2" | asset_url }}') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --alpha-button-background: 1;
   --alpha-button-border: 1;
@@ -6,6 +30,8 @@
   --focused-base-outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
   --focused-base-outline-offset: 0.3rem;
   --focused-base-box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0.5rem 0.4rem rgba(var(--color-foreground), 0.3);
+  --font-heading-family: 'Satoshi-Medium', sans-serif !important;
+  --font-body-family: 'Satoshi-Medium', sans-serif !important;
 }
 
 .product-card-wrapper .card,
@@ -75,6 +101,10 @@
 }
 
 /* base */
+h1, .h1, .h0 {
+  font-family: 'Satoshi', sans-serif !important;
+  font-weight: 300 !important; /* Trình duyệt sẽ tự động gọi file Satoshi-Regular ra */
+}
 
 .page-width {
   max-width: var(--page-width);

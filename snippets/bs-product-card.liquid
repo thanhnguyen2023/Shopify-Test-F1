@@ -1,0 +1,74 @@
+{% comment %}
+  Snippet: bs-product-card.liquid
+  File: snippets/bs-product-card.liquid
+
+  Usage:
+    {% render 'bs-product-card', product: product, section: section, index: forloop.index %}
+
+  Variables:
+    product  — Shopify product object
+    section  — section object (để đọc settings nếu cần)
+    index    — số thứ tự (optional, dùng để lazy-load ảnh đầu tiên)
+{% endcomment %}
+{%- liquid
+  assign featured_image = product.featured_image | default: product.images[0]
+  assign loading = 'lazy'
+  if index <= 3
+    assign loading = 'eager'
+  endif
+
+  assign has_sale = false
+  if product.compare_at_price > product.price
+    assign has_sale = true
+  endif
+-%}
+
+<div class="bs-card" data-product-id="{{ product.id }}">
+  {%- comment -%} ── Card Image ── {%- endcomment -%}
+  <div class="bs-card__image-wrap">
+    <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {%- if featured_image -%}
+        <img
+          src="{{ featured_image | image_url: width: 600 }}"
+          alt="{{ featured_image.alt | escape | default: product.title | escape }}"
+          width="{{ featured_image.width }}"
+          height="{{ featured_image.height }}"
+          loading="{{ loading }}"
+        >
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'bs-card__placeholder' }}
+      {%- endif -%}
+    </a>
+
+    {%- comment -%} Quick-view icon (dẫn thẳng tới product page) {%- endcomment -%}
+    <a
+      class="bs-card__quick-link"
+      href="{{ product.url }}"
+      aria-label="View {{ product.title | escape }}"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    {%- if has_sale and section.settings.show_sale_badge != false -%}
+      <span class="bs-card__badge">Sale</span>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ── Card Details ── {%- endcomment -%}
+  <div class="bs-card__details">
+    <a class="bs-card__title" href="{{ product.url }}">
+      {{ product.title }}
+    </a>
+
+    <p class="bs-card__price">
+      {%- if has_sale -%}
+        <span class="bs-card__price--sale">{{ product.price | money }}</span>
+        <s class="bs-card__price--compare">{{ product.compare_at_price | money }}</s>
+      {%- else -%}
+        {{ product.price | money }}
+      {%- endif -%}
+    </p>
+  </div>
+</div>

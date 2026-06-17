@@ -82,6 +82,49 @@
                 {%- case block.type -%}
                   {%- when '@app' -%}
                     {% render block %}
+                  {%- when 'custom_newsletter' -%}
+                    <div
+                      class="footer-block custom-newsletter-col"
+                      {{ block.shopify_attributes }}
+                      style="width: 100%; text-align: left !important;"
+                    >
+                      {%- if block.settings.custom_heading != blank -%}
+                        <h2 style="color: #ffffff; font-size: 32px; font-weight: 400; margin-bottom: 10px; margin-top: 0; font-family: inherit; text-align: left;">
+                          {{ block.settings.custom_heading }}
+                        </h2>
+                      {%- endif -%}
+
+                      {%- if block.settings.subtext != blank -%}
+                        <p style="color: #e0e0e0; font-size: 16px; margin-bottom: 12px; line-height: 1.5; font-family: inherit; font-weight: 300; text-align: left;">
+                          {{ block.settings.subtext }}
+                        </p>
+                      {%- endif -%}
+
+                      {% form 'customer', class: 'newsletter-form' %}
+                        <input type="hidden" name="contact[tags]" value="newsletter">
+                        <div style="display: flex; gap: 12px; width: 100%; max-width: 100%; align-items: stretch; margin: 0;">
+                          <input
+                            type="email"
+                            name="contact[email]"
+                            placeholder="{{ block.settings.placeholder }}"
+                            required
+                            style="flex: 1; padding: 12px 16px; background: transparent; border: 1px s olid #ffffff; color: #ffffff; outline: none; font-size: 15px; font-family: inherit; min-width: 0;"
+                          >
+
+                          <button
+                            type="submit"
+                            style="padding: 12px 24px; background: #ffffff; color: #112341; border: 1px solid #ffffff; font-weight: 500; font-size: 15px; cursor: pointer; font-family: inherit; white-space: nowrap;"
+                          >
+                            {{ block.settings.button_text }}
+                          </button>
+                        </div>
+                        {% if form.posted_successfully? %}
+                          <p style="color: #4caf50; margin-top: 10px; font-size: 14px; text-align: left;">
+                            Thanks for subscribing!
+                          </p>
+                        {% endif %}
+                      {% endform %}
+                    </div>
                   {%- when 'text' -%}
                     <div class="footer-block__details-content rte">
                       {{ block.settings.subtext }}
@@ -208,7 +251,7 @@
                         {{- 'icon-arrow.svg' | inline_asset_content -}}
                       </span>
                     </button>
-                  </div> 
+                  </div>
                   {%- if form.errors -%}
                     <small class="newsletter-form__message form__message" id="ContactFooter-error">
                       <span class="svg-wrapper">
@@ -303,8 +346,8 @@
           >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
         </small>
         <small class="copyright__content"
-          >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url }}. Thiết kế bởi Nguyên. Bảo lưu
-          mọi quyền lợi.</small
+          >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url }}. Thiết kế bởi Nguyên. Bảo lưu mọi
+          quyền lợi.</small
         >
         {%- if section.settings.show_policy -%}
           <ul class="policies list-unstyled">
@@ -330,6 +373,37 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "custom_newsletter",
+      "name": "Custom Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "custom_heading",
+          "label": "Tiêu đề (Heading)",
+          "default": ".NOVA STUDIO"
+        },
+        {
+          "type": "textarea",
+          "id": "subtext",
+          "label": "Mô tả (Subtext)",
+          "default": "Sign up to receive style tips, exclusive offers, and new arrivals."
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Chữ mờ ô nhập (Placeholder)",
+          "default": "Enter your Email"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Chữ nút bấm (Button)",
+          "default": "SUBSCRIBE"
+        }
+      ]
     },
     {
       "type": "link_list",

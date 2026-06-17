@@ -1,0 +1,545 @@
+{% comment %}
+  Section: Highlight Editorial
+  File: sections/highlight-editorial.liquid
+{% endcomment %}
+
+<section
+  class="hl-section"
+  id="highlight-editorial-{{ section.id }}"
+  style="
+    --hl-bg: {{ section.settings.background_color }};
+    --hl-text-primary: {{ section.settings.text_primary_color }};
+    --hl-text-secondary: {{ section.settings.text_secondary_color }};
+    --hl-accent: {{ section.settings.accent_color }};
+    --hl-accent-text: {{ section.settings.accent_text_color }};
+    --hl-padding-top: {{ section.settings.padding_top }}px;
+    --hl-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="hl-container">
+    {%- comment -%} ── Heading ── {%- endcomment -%}
+    <h2 class="hl-heading">
+      <span class="hl-heading__light">{{ section.settings.heading_regular }}</span>
+      <em class="hl-heading__italic">{{ section.settings.heading_italic }}</em>
+    </h2>
+
+    {%- comment -%} ── Collage + Text blocks ── {%- endcomment -%}
+    <div class="hl-body">
+      {%- comment -%} ── Left text block ── {%- endcomment -%}
+      <div class="hl-text hl-text--left">
+        <h3 class="hl-text__title">
+          <span class="hl-text__title-light">{{ section.settings.left_title_regular }}</span>
+          <em class="hl-text__title-italic">{{ section.settings.left_title_italic }}</em>
+        </h3>
+        {%- if section.settings.left_description != blank -%}
+          <p class="hl-text__desc">{{ section.settings.left_description }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ── Image collage (3 ảnh chồng lệch) ── {%- endcomment -%}
+      <div class="hl-collage" aria-hidden="true">
+        {%- comment -%} Ảnh trung tâm – lớn nhất {%- endcomment -%}
+        <div class="hl-collage__img hl-collage__img--center">
+          {%- if section.settings.image_center != blank -%}
+            <img
+              src="{{ section.settings.image_center | image_url: width: 700 }}"
+              alt="{{ section.settings.image_center.alt | escape }}"
+              loading="eager"
+              width="525"
+              height="686"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'hl-placeholder' }}
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Ảnh phải – trên {%- endcomment -%}
+        <div class="hl-collage__img hl-collage__img--right">
+          {%- if section.settings.image_right != blank -%}
+            <img
+              src="{{ section.settings.image_right | image_url: width: 450 }}"
+              alt="{{ section.settings.image_right.alt | escape }}"
+              loading="lazy"
+              width="341"
+              height="492"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'hl-placeholder' }}
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Ảnh trái – dưới {%- endcomment -%}
+        <div class="hl-collage__img hl-collage__img--bottom-left">
+          {%- if section.settings.image_bottom_left != blank -%}
+            <img
+              src="{{ section.settings.image_bottom_left | image_url: width: 450 }}"
+              alt="{{ section.settings.image_bottom_left.alt | escape }}"
+              loading="lazy"
+              width="312"
+              height="386"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'hl-placeholder' }}
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} ── Right text block (Design Philosophy) ── {%- endcomment -%}
+      <div class="hl-text hl-text--right">
+        <h3 class="hl-text__title">
+          <span class="hl-text__title-light">{{ section.settings.right_title_regular }}</span>
+          <em class="hl-text__title-italic">{{ section.settings.right_title_italic }}</em>
+        </h3>
+        {%- if section.settings.right_description != blank -%}
+          <p class="hl-text__desc">{{ section.settings.right_description }}</p>
+        {%- endif -%}
+        {%- if section.settings.show_button -%}
+          <a
+            class="hl-btn"
+            href="{{ section.settings.button_url }}"
+          >
+            "default": "Discover "
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #highlight-editorial-{{ section.id }} {
+    background-color: var(--hl-bg);
+    padding-top: var(--hl-padding-top);
+    padding-bottom: var(--hl-padding-bottom);
+  }
+
+  .hl-section .hl-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 64px;
+  }
+
+  /* ── Heading ── */
+  .hl-section .hl-heading {
+    font-size: 80px;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--hl-text-primary);
+    margin: 0;
+    font-style: normal;
+    font-weight: 300;
+  }
+
+  .hl-section .hl-heading__light {
+    font-weight: 300;
+    font-style: normal;
+    font-family: inherit;
+  }
+
+  .hl-section .hl-heading__italic {
+    font-family: 'Didot', 'Didot LT STD', 'Bodoni MT', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* ── Body layout ── */
+  .hl-section .hl-body {
+    position: relative;
+    width: 100%;
+    max-width: 1360px;
+    /* desktop: fixed-ratio height dựa trên design gốc ~845px / 1360px */
+    aspect-ratio: 1360 / 845;
+  }
+
+  /* ── Collage ── */
+  .hl-section .hl-collage {
+    position: absolute;
+    /* căn giữa theo thiết kế: left 168px / 1360px ≈ 12.35% */
+    left: 12.35%;
+    top: 0;
+    /* width 961px / 1360px ≈ 70.66% */
+    width: 70.66%;
+    height: 100%;
+  }
+
+  .hl-section .hl-collage__img {
+    position: absolute;
+    overflow: hidden;
+  }
+
+  .hl-section .hl-collage__img img,
+  .hl-section .hl-collage__img .hl-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Ảnh trung tâm: width 525/961≈54.6%, height 686/837≈81.96%, left 50%-40px */
+  .hl-section .hl-collage__img--center {
+    width: 54.6%;
+    height: 81.96%;
+    left: 50%;
+    top: 0;
+    transform: translateX(calc(-50% - 4%));
+  }
+
+  /* Ảnh phải: width 341/961≈35.5%, height 492/837≈58.78%, left 620/961≈64.5%, top 75/837≈8.96% */
+  .hl-section .hl-collage__img--right {
+    width: 35.5%;
+    height: 58.78%;
+    left: 64.5%;
+    top: 8.96%;
+  }
+
+  /* Ảnh trái dưới: width 312/961≈32.47%, height 386/837≈46.12%, left 0, top 451/837≈53.88% */
+  .hl-section .hl-collage__img--bottom-left {
+    width: 32.47%;
+    height: 46.12%;
+    left: 0;
+    top: 53.88%;
+  }
+
+  /* ── Text blocks ── */
+  .hl-section .hl-text {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Left text: left 0, top 187/845≈22.13%, width 321/1360≈23.6% */
+  .hl-section .hl-text--left {
+    left: 0;
+    top: 22.13%;
+    width: 23.6%;
+  }
+
+  /* Right text: left 923/1360≈67.87%, top 629/845≈74.44%, width 437/1360≈32.13% */
+  .hl-section .hl-text--right {
+    left: 67.87%;
+    top: 74.44%;
+    width: 32.13%;
+    gap: 40px;
+  }
+
+  .hl-section .hl-text__title {
+    font-size: 40px;
+    line-height: 44px;
+    color: var(--hl-text-primary);
+    margin: 0;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .hl-section .hl-text__title-light {
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .hl-section .hl-text__title-italic {
+    font-family: 'Didot', 'Didot LT STD', 'Bodoni MT', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .hl-section .hl-text__desc {
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--hl-text-secondary);
+    margin: 0;
+  }
+
+  /* ── Button ── */
+  .hl-section .hl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: var(--hl-accent);
+    color: var(--hl-accent-text);
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 400;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    align-self: flex-start;
+  }
+
+  .hl-section .hl-btn:hover {
+    opacity: 0.85;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1200px) {
+    .hl-section .hl-heading { font-size: 60px; }
+    .hl-section .hl-text__title { font-size: 32px; }
+  }
+
+  @media (max-width: 900px) {
+    /* Stack layout: heading → images → 2 text blocks */
+    .hl-section .hl-body {
+      aspect-ratio: unset;
+      position: static;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .hl-section .hl-collage {
+      position: static;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      height: auto;
+    }
+
+    .hl-section .hl-collage__img--center {
+      width: 60%;
+      height: 90%;
+      left: 20%;
+      transform: none;
+    }
+
+    .hl-section .hl-collage__img--right {
+      width: 38%;
+      height: 60%;
+      left: 62%;
+      top: 5%;
+    }
+
+    .hl-section .hl-collage__img--bottom-left {
+      width: 35%;
+      left: 2%;
+      top: 50%;
+      height: 46%;
+    }
+
+    .hl-section .hl-text--left,
+    .hl-section .hl-text--right {
+      position: static;
+      width: 100%;
+    }
+
+    .hl-section .hl-text--right {
+      gap: 24px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hl-section .hl-container {
+      padding-left: 20px;
+      padding-right: 20px;
+      gap: 40px;
+    }
+
+    .hl-section .hl-heading { font-size: 36px; }
+    .hl-section .hl-text__title { font-size: 28px; line-height: 36px; }
+
+    .hl-section .hl-collage {
+      aspect-ratio: 3 / 4;
+    }
+
+    .hl-section .hl-collage__img--center {
+      width: 75%;
+      height: 85%;
+      left: 12%;
+    }
+
+    .hl-section .hl-collage__img--right {
+      width: 45%;
+      left: 55%;
+      top: 2%;
+      height: 45%;
+    }
+
+    .hl-section .hl-collage__img--bottom-left {
+      width: 42%;
+      left: 0;
+      top: 55%;
+      height: 40%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom Highlight",
+  "tag": "section",
+  "class": "hl-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading_regular",
+      "label": "Heading – regular part",
+      "default": "Elevating Every "
+    },
+    {
+      "type": "text",
+      "id": "heading_italic",
+      "label": "Heading – italic part",
+      "default": "Elegance"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_center",
+      "label": "Center image (large)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_right",
+      "label": "Right image (top right)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bottom_left",
+      "label": "Bottom-left image"
+    },
+    {
+      "type": "header",
+      "content": "Left text block"
+    },
+    {
+      "type": "text",
+      "id": "left_title_regular",
+      "label": "Title – regular part",
+      "default": "Discover "
+    },
+    {
+      "type": "text",
+      "id": "left_title_italic",
+      "label": "Title – italic part",
+      "default": "Highlights"
+    },
+    {
+      "type": "textarea",
+      "id": "left_description",
+      "label": "Description",
+      "default": "Discover statement pieces that redefine versatility — from flowing silhouettes to structured essentials, each design is crafted for effortless style."
+    },
+    {
+      "type": "header",
+      "content": "Right text block (Design Philosophy)"
+    },
+    {
+      "type": "text",
+      "id": "right_title_regular",
+      "label": "Title – regular part",
+      "default": "Design "
+    },
+    {
+      "type": "text",
+      "id": "right_title_italic",
+      "label": "Title – italic part",
+      "default": "Philosophy"
+    },
+    {
+      "type": "textarea",
+      "id": "right_description",
+      "label": "Description",
+      "default": "NOVA STUDIO embraces timeless minimalism, blending refined tailoring with modern femininity to create pieces that transcend seasons."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "LEARN MORE"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f3e9dc"
+    },
+    {
+      "type": "color",
+      "id": "text_primary_color",
+      "label": "Primary text",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "text_secondary_color",
+      "label": "Secondary text",
+      "default": "#959595"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Button background",
+      "default": "#08254f"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Highlight"
+    }
+  ]
+}
+{% endschema %}

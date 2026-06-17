@@ -1,0 +1,89 @@
+{%- style -%}
+  /* Lớp bọc ngoài cùng xử lý màu nền tràn viền */
+  .custom-top-nav-wrapper {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+
+  /* Flexbox sắp xếp nội dung bên trong Container */
+  .custom-top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0; /* Bỏ padding trái phải, chỉ giữ padding trên dưới */
+    font-size: 1.3rem;
+    letter-spacing: 0.06rem;
+  }
+  
+  .custom-top-nav p {
+    margin: 0;
+    color: inherit;
+  }
+
+  .custom-top-nav a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  /* Responsive Mobile */
+  @media screen and (max-width: 749px) {
+    .custom-top-nav {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.8rem;
+    }
+  }
+{%- endstyle -%}
+<div class="custom-top-nav-wrapper">
+  <div class="page-width"> <div class="custom-top-nav">
+      <div class="top-nav-left">
+        {% if section.settings.text_left != blank %}
+          {{ section.settings.text_left }}
+        {% endif %}
+      </div>
+      
+      <div class="top-nav-right">
+        {% if section.settings.text_right != blank %}
+          {{ section.settings.text_right }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Top Nav",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#002447"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "richtext",
+      "id": "text_left",
+      "label": "Left Text",
+      "default": "<p>Hotline: +123 456 789</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text_right",
+      "label": "Right Text",
+      "default": "<p>Sign up to get 20% OFF for your</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Top Nav"
+    }
+  ]
+}
+{% endschema %}

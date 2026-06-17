@@ -1,0 +1,536 @@
+{% comment %}
+  Section: Nova Collection About
+  Design: Nova Web UI - Collection option 6 (node 4009:421)
+{% endcomment %}
+
+{%- liquid
+  assign section_id = 'nova-collection-' | append: section.id
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="nova-collection-about"
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="nova-collection-about__inner{% if section.settings.full_width %} nova-collection-about__inner--full{% else %} page-width{% endif %}">
+    {%- comment %} ── Header row ── {%- endcomment %}
+    <div class="nova-collection-about__header">
+      <div class="nova-collection-about__heading-wrap">
+        <h2 class="nova-collection-about__heading" style="color: {{ section.settings.heading_color }};">
+          {{ section.settings.heading | default: 'Designed for <em>real life</em> — and <em>real women</em>.' }}
+        </h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="nova-collection-about__subheading" style="color: {{ section.settings.subheading_color }};">
+            {{ section.settings.subheading }}
+          </p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment %} ── Images grid ── {%- endcomment %}
+    <div class="nova-collection-about__images-wrap">
+      <div class="nova-collection-about__images">
+        {%- comment %} Image 1 – large left {%- endcomment %}
+        <div class="nova-collection-about__img nova-collection-about__img--lg">
+          {%- if section.settings.image_1 != blank -%}
+            {%- assign image_1_alt = section.settings.image_1.alt | escape -%}
+            {{
+              section.settings.image_1
+              | image_url: width: 1200
+              | image_tag:
+                loading: 'lazy',
+                class: 'nova-collection-about__img-el',
+                alt: image_1_alt,
+                widths: '400, 600, 800, 1000, 1200'
+            }}
+          {%- else -%}
+            {{
+              'collection-1'
+              | placeholder_svg_tag: 'nova-collection-about__img-el nova-collection-about__img-el--placeholder'
+            }}
+          {%- endif -%}
+        </div>
+
+        {%- comment %} Image 2 – medium centre {%- endcomment %}
+        <div class="nova-collection-about__img nova-collection-about__img--md">
+          {%- if section.settings.image_2 != blank -%}
+            {%- assign image_2_alt = section.settings.image_2.alt | escape -%}
+            {{
+              section.settings.image_2
+              | image_url: width: 800
+              | image_tag:
+                loading: 'lazy',
+                class: 'nova-collection-about__img-el',
+                alt: image_2_alt,
+                widths: '300, 500, 700, 900'
+            }}
+          {%- else -%}
+            {{
+              'collection-2'
+              | placeholder_svg_tag: 'nova-collection-about__img-el nova-collection-about__img-el--placeholder'
+            }}
+          {%- endif -%}
+        </div>
+
+        {%- comment %} Image 3 – medium right {%- endcomment %}
+        <div class="nova-collection-about__img nova-collection-about__img--md2">
+          {%- if section.settings.image_3 != blank -%}
+            {%- assign image_3_alt = section.settings.image_3.alt | escape -%}
+            {{
+              section.settings.image_3
+              | image_url: width: 900
+              | image_tag:
+                loading: 'lazy',
+                class: 'nova-collection-about__img-el',
+                alt: image_3_alt,
+                widths: '350, 550, 750, 950'
+            }}
+          {%- else -%}
+            {{
+              'collection-3'
+              | placeholder_svg_tag: 'nova-collection-about__img-el nova-collection-about__img-el--placeholder'
+            }}
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment %} ── Divider ── {%- endcomment %}
+      <div
+        class="nova-collection-about__divider"
+        style="background-color: {{ section.settings.divider_color }};"
+      ></div>
+
+      {%- comment %} ── Footer row: About Us + description + button ── {%- endcomment %}
+      <div class="nova-collection-about__footer">
+        <p class="nova-collection-about__footer-title" style="color: {{ section.settings.heading_color }};">
+          {{ section.settings.footer_title | default: 'About Us' }}
+        </p>
+
+        <div class="nova-collection-about__footer-right">
+          {%- if section.settings.footer_text != blank -%}
+            <p class="nova-collection-about__footer-text" style="color: {{ section.settings.subheading_color }};">
+              {{ section.settings.footer_text }}
+            </p>
+          {%- endif -%}
+
+          {%- if section.settings.button_label != blank -%}
+            <a
+              href="{{ section.settings.button_url | default: '/pages/about' }}"
+              class="nova-collection-about__btn"
+              style="
+                background-color: {{ section.settings.button_bg_color }};
+                color: {{ section.settings.button_text_color }};
+              "
+            >
+              <span>{{ section.settings.button_label }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ─── Root tokens ─── */
+  #{{ section_id }} {
+    --nova-text-primary:    {{ section.settings.heading_color }};
+    --nova-text-secondary:  {{ section.settings.subheading_color }};
+    --nova-divider:         {{ section.settings.divider_color }};
+    --nova-btn-bg:          {{ section.settings.button_bg_color }};
+    --nova-btn-text:        {{ section.settings.button_text_color }};
+    --nova-img-height:      {{ section.settings.image_height }}px;
+    --nova-gap:             24px;
+  }
+
+  /* ─── Wrapper ─── */
+  .nova-collection-about__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .nova-collection-about__inner--full {
+    max-width: 100%;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  /* ─── Header ─── */
+  .nova-collection-about__header {
+    width: 100%;
+  }
+
+  .nova-collection-about__heading-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 760px;
+  }
+
+  .nova-collection-about__heading {
+    font-family: 'Didot', 'Times New Roman', serif;
+    font-size: clamp(40px, 5.5vw, 80px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.2;
+    color: var(--nova-text-primary);
+    margin: 0;
+  }
+
+  .nova-collection-about__heading em {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .nova-collection-about__subheading {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--nova-text-secondary);
+    margin: 0;
+    max-width: 560px;
+  }
+
+  /* ─── Images grid ─── */
+  .nova-collection-about__images-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .nova-collection-about__images {
+    display: grid;
+    grid-template-columns: 42fr 24fr 33fr; /* mirrors Figma widths: 553 / 322 / 437 */
+    gap: var(--nova-gap);
+    height: var(--nova-img-height);
+    width: 100%;
+  }
+
+  .nova-collection-about__img {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .nova-collection-about__img-el {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .nova-collection-about__img-el--placeholder {
+    background: #e7e3da;
+  }
+
+  /* ─── Divider ─── */
+  .nova-collection-about__divider {
+    height: 1px;
+    width: 100%;
+  }
+
+  /* ─── Footer row ─── */
+  .nova-collection-about__footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .nova-collection-about__footer-title {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--nova-text-primary);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .nova-collection-about__footer-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 437px;
+    width: 100%;
+  }
+
+  .nova-collection-about__footer-text {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--nova-text-secondary);
+    margin: 0;
+  }
+
+  /* ─── Button ─── */
+  .nova-collection-about__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: var(--nova-btn-bg);
+    color: var(--nova-btn-text);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+  }
+
+  .nova-collection-about__btn:hover {
+    opacity: 0.85;
+  }
+
+  .nova-collection-about__btn svg {
+    flex-shrink: 0;
+  }
+
+  /* ─── Responsive ─── */
+  @media screen and (max-width: 1024px) {
+    .nova-collection-about__images {
+      grid-template-columns: 1fr 1fr;
+      height: auto;
+    }
+
+    .nova-collection-about__img {
+      height: var(--nova-img-height);
+    }
+
+    .nova-collection-about__img:last-child {
+      grid-column: span 2;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .nova-collection-about__inner {
+      gap: 40px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .nova-collection-about__inner--full {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .nova-collection-about__images {
+      grid-template-columns: 1fr;
+      height: auto;
+    }
+
+    .nova-collection-about__img {
+      height: 300px;
+    }
+
+    .nova-collection-about__img:last-child {
+      grid-column: span 1;
+    }
+
+    .nova-collection-about__footer {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .nova-collection-about__footer-right {
+      max-width: 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom About Section",
+  "tag": "section",
+  "class": "section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full page width",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 200,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "label": "Image row height",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f1ea"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading / body color",
+      "default": "#959595"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#e7e3da"
+    },
+    {
+      "type": "header",
+      "content": "Heading & Subtitle"
+    },
+    {
+      "type": "html",
+      "id": "heading",
+      "label": "Heading (HTML allowed for <em> italic)",
+      "default": "Designed for <em>real life</em> — and <em>real women</em>."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subtitle",
+      "default": "NOVA Studio creates minimalist, elegant fashion designed for real women, celebrating their beauty and individuality in everyday life."
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1 (large – left)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2 (medium – centre)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3 (medium – right)"
+    },
+    {
+      "type": "header",
+      "content": "About Us Footer"
+    },
+    {
+      "type": "text",
+      "id": "footer_title",
+      "label": "Footer title",
+      "default": "About Us"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_text",
+      "label": "Footer description",
+      "default": "At NOVA Studio, we pride ourselves on crafting minimalist and elegant fashion that is thoughtfully designed for the realities of everyday life. Our collections are tailored specifically for real women, celebrating their unique beauty and individuality."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "LEARN MORE"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#08254f"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom About Section"
+    }
+  ]
+}
+{% endschema %}

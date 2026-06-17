@@ -1,0 +1,871 @@
+{% comment %}
+  Section: header-navigation
+  Nova Studio – Navigation Bar
+  Hỗ trợ: logo text, menu links (tối đa 4 items), dropdown cho item có sub-links,
+           search icon, cart icon, login/signup buttons.
+  Page width: full-width với padding theo theme editor.
+{% endcomment %}
+
+<style>
+  .nova-header {
+    background-color: {{ section.settings.background_color }};
+    border-bottom: 1px solid {{ section.settings.border_color }};
+    width: 100%;
+    position: {{ section.settings.header_position }};
+    top: 0;
+    left: 0;
+    z-index: 100;
+  }
+
+  .nova-header__inner {
+    max-width: {{ section.settings.page_width }}px;
+    margin: 0 auto;
+    padding: 24px {{ section.settings.horizontal_padding }}px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  /* ── Logo ── */
+  .nova-header__logo a {
+    font-family: {{ section.settings.logo_font | default: 'inherit' }};
+    font-size: {{ section.settings.logo_font_size }}px;
+    font-weight: 400;
+    line-height: 1.33;
+    color: {{ section.settings.logo_color }};
+    text-decoration: none;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  /* ── Nav Menu (centered) ── */
+  .nova-header__menu {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nova-header__menu-item {
+    position: relative;
+  }
+
+  .nova-header__menu-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: {{ section.settings.nav_font_size }}px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: {{ section.settings.nav_color_inactive }};
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  .nova-header__menu-link:hover,
+  .nova-header__menu-link--active {
+    color: {{ section.settings.nav_color_active }};
+  }
+
+  .nova-header__menu-link .nova-chevron {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  /* Dropdown */
+  .nova-header__dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 180px;
+    background-color: {{ section.settings.background_color }};
+    border: 1px solid {{ section.settings.border_color }};
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    z-index: 200;
+  }
+
+  .nova-header__menu-item:hover .nova-header__dropdown {
+    display: block;
+  }
+
+  .nova-header__menu-item:hover .nova-chevron {
+    transform: rotate(180deg);
+  }
+
+  .nova-header__dropdown-link {
+    display: block;
+    padding: 10px 20px;
+    font-size: {{ section.settings.nav_font_size }}px;
+    color: {{ section.settings.nav_color_inactive }};
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .nova-header__dropdown-link:hover {
+    color: {{ section.settings.nav_color_active }};
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  /* ── User Actions ── */
+  .nova-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .nova-header__icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: {{ section.settings.icon_color }};
+    transition: opacity 0.2s ease;
+  }
+
+  .nova-header__icon-btn:hover {
+    opacity: 0.7;
+  }
+
+  .nova-header__icon-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: block;
+  }
+
+  /* Auth Buttons */
+  .nova-header__auth {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .nova-header__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
+    font-size: {{ section.settings.nav_font_size }}px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-decoration: none;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    border: none;
+  }
+
+  .nova-header__btn--login {
+    background: transparent;
+    color: {{ section.settings.login_color }};
+  }
+
+  .nova-header__btn--login:hover {
+    opacity: 0.7;
+  }
+
+  .nova-header__btn--signup {
+    background-color: {{ section.settings.signup_bg_color }};
+    color: {{ section.settings.signup_text_color }};
+  }
+
+  .nova-header__btn--signup:hover {
+    opacity: 0.85;
+  }
+
+  /* Cart badge */
+  .nova-header__cart-wrapper {
+    position: relative;
+  }
+
+  .nova-header__cart-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: {{ section.settings.signup_bg_color }};
+    color: {{ section.settings.signup_text_color }};
+    font-size: 10px;
+    font-weight: 600;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* ── Mobile hamburger ── */
+  .nova-header__hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .nova-header__hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: {{ section.settings.nav_color_active }};
+    transition: all 0.3s ease;
+  }
+
+  /* ── Mobile Drawer ── */
+  .nova-mobile-nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+  }
+
+  .nova-mobile-nav__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+  }
+
+  .nova-mobile-nav__panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    background-color: {{ section.settings.background_color }};
+    padding: 32px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nova-mobile-nav__close {
+    align-self: flex-end;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: {{ section.settings.nav_color_active }};
+    margin-bottom: 16px;
+  }
+
+  .nova-mobile-nav__close svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    fill: none;
+  }
+
+  .nova-mobile-nav__link {
+    display: block;
+    padding: 12px 0;
+    font-size: 16px;
+    color: {{ section.settings.nav_color_active }};
+    text-decoration: none;
+    border-bottom: 1px solid {{ section.settings.border_color }};
+  }
+
+  .nova-mobile-nav__sub {
+    padding: 8px 0 8px 16px;
+    list-style: none;
+    margin: 0;
+  }
+
+  .nova-mobile-nav__sub a {
+    display: block;
+    padding: 8px 0;
+    font-size: 14px;
+    color: {{ section.settings.nav_color_inactive }};
+    text-decoration: none;
+  }
+
+  .nova-mobile-nav__auth {
+    margin-top: auto;
+    padding-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nova-mobile-nav__auth .nova-header__btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 991px) {
+    .nova-header__menu,
+    .nova-header__auth {
+      display: none !important;
+    }
+
+    .nova-header__hamburger {
+      display: flex;
+    }
+
+    {% if section.settings.hide_search_mobile %}
+    .nova-header__icon-btn--search {
+      display: none;
+    }
+    {% endif %}
+  }
+
+  @media (max-width: 767px) {
+    .nova-header__inner {
+      padding: 16px {{ section.settings.horizontal_padding | divided_by: 1.5 | round }}px;
+    }
+  }
+</style>
+
+<header class="nova-header" data-section-id="{{ section.id }}">
+  <div class="nova-header__inner">
+
+    {%- comment -%} ── LOGO ── {%- endcomment -%}
+    <div class="nova-header__logo">
+      <a href="{{ routes.root_url }}" aria-label="{{ section.settings.logo_text | escape }}">
+        {%- if section.settings.logo_image != blank -%}
+          {{
+            section.settings.logo_image
+            | image_url: width: 300
+            | image_tag:
+              loading: 'eager',
+              alt: section.settings.logo_text,
+              width: section.settings.logo_image_width,
+              height: section.settings.logo_image_width | divided_by: section.settings.logo_image.aspect_ratio | round
+          }}
+        {%- else -%}
+          {{ section.settings.logo_text }}
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- comment -%} ── DESKTOP MENU ── {%- endcomment -%}
+    <nav aria-label="Main navigation">
+      <ul class="nova-header__menu">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'menu_item' -%}
+            {%- assign has_dropdown = false -%}
+            {%- if block.settings.submenu != blank -%}
+              {%- assign submenu_links = linklists[block.settings.submenu] -%}
+              {%- if submenu_links.links.size > 0 -%}
+                {%- assign has_dropdown = true -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            <li class="nova-header__menu-item" {{ block.shopify_attributes }}>
+              <a
+                href="{{ block.settings.url | default: '#' }}"
+                class="nova-header__menu-link {% if block.settings.is_active %}nova-header__menu-link--active{% endif %}"
+                {% if has_dropdown %}aria-haspopup="true" aria-expanded="false"{% endif %}
+              >
+                {{- block.settings.label -}}
+                {%- if has_dropdown -%}
+                  <svg class="nova-chevron" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {%- endif -%}
+              </a>
+
+              {%- if has_dropdown -%}
+                <ul class="nova-header__dropdown" role="menu">
+                  {%- for link in submenu_links.links -%}
+                    <li role="none">
+                      <a href="{{ link.url }}" class="nova-header__dropdown-link" role="menuitem">
+                        {{- link.title -}}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    {%- comment -%} ── USER ACTIONS ── {%- endcomment -%}
+    <div class="nova-header__actions">
+
+      {%- if section.settings.show_search -%}
+        <button
+          type="button"
+          class="nova-header__icon-btn nova-header__icon-btn--search"
+          aria-label="{{ 'general.search.submit' | t }}"
+          data-nova-search-toggle
+        >
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="M16.5 16.5L21 21"/>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      {%- if section.settings.show_cart -%}
+        <div class="nova-header__cart-wrapper">
+          <a
+            href="{{ routes.cart_url }}"
+            class="nova-header__icon-btn"
+            aria-label="{{ 'sections.header.cart_count' | t: count: cart.item_count }}"
+          >
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+          </a>
+          {%- if cart.item_count > 0 -%}
+            <span class="nova-header__cart-badge" aria-label="{{ cart.item_count }} items">
+              {{- cart.item_count -}}
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_auth_buttons -%}
+        <div class="nova-header__auth">
+          {%- if customer -%}
+            <a href="{{ routes.account_url }}" class="nova-header__btn nova-header__btn--login">
+              {{- section.settings.account_label | default: 'ACCOUNT' -}}
+            </a>
+            <a href="{{ routes.account_logout_url }}" class="nova-header__btn nova-header__btn--signup">
+              {{- section.settings.logout_label | default: 'LOG OUT' -}}
+            </a>
+          {%- else -%}
+            <a href="{{ routes.account_login_url }}" class="nova-header__btn nova-header__btn--login">
+              {{- section.settings.login_label -}}
+            </a>
+            <a href="{{ routes.account_register_url }}" class="nova-header__btn nova-header__btn--signup">
+              {{- section.settings.signup_label -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Mobile hamburger {%- endcomment -%}
+      <button
+        type="button"
+        class="nova-header__hamburger"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="nova-mobile-nav"
+        data-nova-hamburger
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+{%- comment -%} ── MOBILE DRAWER ── {%- endcomment -%}
+<div class="nova-mobile-nav" id="nova-mobile-nav" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+  <div class="nova-mobile-nav__overlay" data-nova-overlay></div>
+  <div class="nova-mobile-nav__panel">
+    <button type="button" class="nova-mobile-nav__close" data-nova-close aria-label="Close menu">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'menu_item' -%}
+        <a
+          href="{{ block.settings.url | default: '#' }}"
+          class="nova-mobile-nav__link"
+        >
+          {{- block.settings.label -}}
+        </a>
+
+        {%- if block.settings.submenu != blank -%}
+          {%- assign submenu_links = linklists[block.settings.submenu] -%}
+          {%- if submenu_links.links.size > 0 -%}
+            <ul class="nova-mobile-nav__sub">
+              {%- for link in submenu_links.links -%}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if section.settings.show_auth_buttons -%}
+      <div class="nova-mobile-nav__auth">
+        {%- if customer -%}
+          <a href="{{ routes.account_url }}" class="nova-header__btn nova-header__btn--login">
+            {{- section.settings.account_label | default: 'ACCOUNT' -}}
+          </a>
+          <a href="{{ routes.account_logout_url }}" class="nova-header__btn nova-header__btn--signup">
+            {{- section.settings.logout_label | default: 'LOG OUT' -}}
+          </a>
+        {%- else -%}
+          <a href="{{ routes.account_login_url }}" class="nova-header__btn nova-header__btn--login">
+            {{- section.settings.login_label -}}
+          </a>
+          <a href="{{ routes.account_register_url }}" class="nova-header__btn nova-header__btn--signup">
+            {{- section.settings.signup_label -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    var hamburger = document.querySelector('[data-nova-hamburger]');
+    var mobileNav = document.getElementById('nova-mobile-nav');
+    var overlay   = mobileNav.querySelector('[data-nova-overlay]');
+    var closeBtn  = mobileNav.querySelector('[data-nova-close]');
+
+    function openNav() {
+      mobileNav.style.display = 'block';
+      mobileNav.setAttribute('aria-hidden', 'false');
+      hamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeNav() {
+      mobileNav.style.display = 'none';
+      mobileNav.setAttribute('aria-hidden', 'true');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', openNav);
+    overlay.addEventListener('click', closeNav);
+    closeBtn.addEventListener('click', closeNav);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeNav();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Navigation Bar",
+  "tag": "div",
+  "class": "nova-header-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "page_width",
+      "min": 1000,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "label": "Page width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "header_position",
+      "label": "Header position",
+      "options": [
+        { "value": "static",   "label": "Static (in flow)" },
+        { "value": "sticky",   "label": "Sticky (scroll with page)" },
+        { "value": "fixed",    "label": "Fixed (always visible)" }
+      ],
+      "default": "sticky"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#fdf8f2"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e7e7e7"
+    },
+    {
+      "type": "color",
+      "id": "nav_color_active",
+      "label": "Nav link – active color",
+      "default": "#1d1d1d"
+    },
+    {
+      "type": "color",
+      "id": "nav_color_inactive",
+      "label": "Nav link – inactive color",
+      "default": "#959595"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#1d1d1d"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image (overrides text)"
+    },
+    {
+      "type": "range",
+      "id": "logo_image_width",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo image width",
+      "default": 160
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": ".NOVA STUDIO"
+    },
+    {
+      "type": "color",
+      "id": "logo_color",
+      "label": "Logo text color",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "range",
+      "id": "logo_font_size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Logo font size",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "range",
+      "id": "nav_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Nav font size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_search_mobile",
+      "label": "Hide search on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show cart icon",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Auth Buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_auth_buttons",
+      "label": "Show login / sign up buttons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "login_label",
+      "label": "Login button label",
+      "default": "LOG IN"
+    },
+    {
+      "type": "text",
+      "id": "signup_label",
+      "label": "Sign up button label",
+      "default": "SIGN UP"
+    },
+    {
+      "type": "text",
+      "id": "account_label",
+      "label": "Account button label (logged in)",
+      "default": "ACCOUNT"
+    },
+    {
+      "type": "text",
+      "id": "logout_label",
+      "label": "Logout button label (logged in)",
+      "default": "LOG OUT"
+    },
+    {
+      "type": "color",
+      "id": "login_color",
+      "label": "Login text color",
+      "default": "#08254f"
+    },
+    {
+      "type": "color",
+      "id": "signup_bg_color",
+      "label": "Sign up background",
+      "default": "#08254f"
+    },
+    {
+      "type": "color",
+      "id": "signup_text_color",
+      "label": "Sign up text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_v",
+      "min": 8,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Button vertical padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_h",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Button horizontal padding",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_item",
+      "name": "Menu Item",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Link label",
+          "default": "Menu Item"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_active",
+          "label": "Mark as active",
+          "default": false,
+          "info": "Highlights this link in the active color"
+        },
+        {
+          "type": "link_list",
+          "id": "submenu",
+          "label": "Dropdown menu",
+          "info": "Select a menu to create a dropdown. Leave blank for no dropdown."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Navigation Bar",
+      "blocks": [
+        {
+          "type": "menu_item",
+          "settings": {
+            "label": "Home",
+            "url": "/",
+            "is_active": true
+          }
+        },
+        {
+          "type": "menu_item",
+          "settings": {
+            "label": "Products",
+            "url": "/collections/all"
+          }
+        },
+        {
+          "type": "menu_item",
+          "settings": {
+            "label": "About",
+            "url": "/pages/about"
+          }
+        },
+        {
+          "type": "menu_item",
+          "settings": {
+            "label": "Blogs",
+            "url": "/blogs/news"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

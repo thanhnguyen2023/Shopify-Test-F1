@@ -1,0 +1,1152 @@
+{% comment %}
+  Section: main-product-nova
+  Nova Studio – Product Detail Page
+  Chức năng đầy đủ như Shopify default product:
+  - Image gallery + thumbnail strip + prev/next arrows
+  - Variant selector (Color → filter images, Size → button swatch)
+  - Quantity stepper
+  - Add to Cart (AJAX) + Buy It Now
+  - Return policy link
+  - Schema + blocks có thể tuỳ chỉnh từ Theme Editor
+{% endcomment %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+  assign product_form_id = 'nova-product-form-' | append: section.id
+-%}
+
+<style>
+  .nova-product {
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.section_padding_v }}px {{ section.settings.section_padding_h }}px;
+  }
+
+  .nova-product__inner {
+    max-width: {{ section.settings.page_width }}px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.col_gap }}px;
+    align-items: start;
+  }
+
+  /* ─── Gallery ─── */
+  .nova-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+  }
+
+  .nova-gallery__main {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: #f8f7f4;
+  }
+
+  .nova-gallery__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .nova-gallery__slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nova-gallery__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+  }
+
+  /* Prev/Next arrows */
+  .nova-gallery__arrows {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .nova-gallery__arrow {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: {{ section.settings.background_color }};
+    border: 1px solid {{ section.settings.border_secondary }};
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .nova-gallery__arrow:hover {
+    border-color: {{ section.settings.color_brand }};
+  }
+
+  .nova-gallery__arrow svg {
+    width: 24px;
+    height: 24px;
+    stroke: {{ section.settings.color_text_primary }};
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nova-gallery__arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* Thumbnails */
+  .nova-gallery__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .nova-gallery__thumb {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .nova-gallery__thumb.is-active {
+    border-color: {{ section.settings.color_brand }};
+  }
+
+  .nova-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ─── Info Panel ─── */
+  .nova-product__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 40px;
+  }
+
+  .nova-product__details {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* Title + Price */
+  .nova-product__heading-group {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .nova-product__title {
+    font-family: {{ section.settings.heading_font | default: 'serif' }};
+    font-size: {{ section.settings.title_font_size }}px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: {{ section.settings.color_text_primary }};
+    margin: 0;
+  }
+
+  .nova-product__price-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.1;
+  }
+
+  .nova-product__price {
+    font-size: {{ section.settings.price_font_size }}px;
+    font-weight: 500;
+    color: {{ section.settings.color_text_primary }};
+  }
+
+  .nova-product__price--compare {
+    font-size: 20px;
+    font-weight: 500;
+    color: {{ section.settings.border_secondary }};
+    text-decoration: line-through;
+  }
+
+  .nova-product__price--sale {
+    color: {{ section.settings.color_sale }};
+  }
+
+  /* Options blocks */
+  .nova-product__options {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .nova-option {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .nova-option__label {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: {{ section.settings.color_text_primary }};
+    margin: 0;
+  }
+
+  .nova-option__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+  }
+
+  /* Swatch button – shared */
+  .nova-swatch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: {{ section.settings.color_text_primary }};
+    background: transparent;
+    border: 1px solid {{ section.settings.border_primary }};
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    text-align: center;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .nova-swatch:hover {
+    border-color: {{ section.settings.color_brand }};
+  }
+
+  .nova-swatch.is-selected {
+    background: {{ section.settings.color_brand }};
+    border-color: {{ section.settings.color_brand }};
+    color: #ffffff;
+    outline: 2px solid {{ section.settings.color_brand }};
+    outline-offset: 2px;
+  }
+
+  .nova-swatch.is-unavailable {
+    opacity: 0.4;
+    cursor: not-allowed;
+    position: relative;
+  }
+
+  .nova-swatch.is-unavailable::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top right, transparent calc(50% - 0.5px), {{ section.settings.border_secondary }} calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  }
+
+  /* ─── Quantity ─── */
+  .nova-qty {
+    display: flex;
+    align-items: center;
+  }
+
+  .nova-qty__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid {{ section.settings.border_secondary }};
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .nova-qty__btn:hover {
+    border-color: {{ section.settings.color_brand }};
+  }
+
+  .nova-qty__btn--plus {
+    border-color: {{ section.settings.color_brand }};
+  }
+
+  .nova-qty__btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: {{ section.settings.color_text_primary }};
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+
+  .nova-qty__input {
+    width: 48px;
+    height: 40px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.1;
+    color: {{ section.settings.color_text_primary }};
+    border: none;
+    background: transparent;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .nova-qty__input::-webkit-inner-spin-button,
+  .nova-qty__input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Return policy */
+  .nova-product__policy a {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: {{ section.settings.color_text_secondary }};
+    text-underline-offset: 3px;
+  }
+
+  /* Shopify dynamic checkout button wrapper */
+  .nova-product__cta .shopify-payment-button {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nova-product__cta .shopify-payment-button__button {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    border-radius: 0 !important;
+  }
+
+  .nova-product__cta .shopify-payment-button__button--unbranded {
+    background: {{ section.settings.color_brand }} !important;
+    color: #ffffff !important;
+  }
+
+  /* ─── CTA Buttons ─── */
+  .nova-product__cta {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    margin-top: 24px;
+  }
+
+  .nova-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s ease;
+    text-decoration: none;
+  }
+
+  .nova-btn--outline {
+    background: transparent;
+    border: 1px solid {{ section.settings.color_brand }};
+    color: {{ section.settings.color_brand }};
+  }
+
+  .nova-btn--outline:hover { opacity: 0.75; }
+
+  .nova-btn--solid {
+    background: {{ section.settings.color_brand }};
+    color: #ffffff;
+  }
+
+  .nova-btn--solid:hover { opacity: 0.85; }
+
+  .nova-btn:disabled,
+  .nova-btn[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Loading state */
+  .nova-btn--loading {
+    position: relative;
+    pointer-events: none;
+  }
+
+  .nova-btn--loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: nova-spin 0.6s linear infinite;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @keyframes nova-spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+  /* Error message */
+  .nova-product__error {
+    display: none;
+    color: #b91c1c;
+    font-size: 14px;
+    padding: 8px 0;
+  }
+
+  .nova-product__error.is-visible { display: block; }
+
+  /* ─── Description block ─── */
+  .nova-product__description {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .nova-product__description p {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: {{ section.settings.color_text_secondary }};
+    margin: 0;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 991px) {
+    .nova-product__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .nova-product__title {
+      font-size: {{ section.settings.title_font_size | times: 0.75 | round }}px;
+    }
+
+    .nova-product__cta {
+      gap: 12px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .nova-product {
+      padding: 32px 16px;
+    }
+
+    .nova-gallery__thumbs {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .nova-product__cta {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<section class="nova-product" data-section-id="{{ section.id }}" data-section-type="main-product">
+  <div class="nova-product__inner">
+    {%- comment -%} ══════════ LEFT: GALLERY ══════════ {%- endcomment -%}
+    <div class="nova-gallery" id="nova-gallery-{{ section.id }}">
+      {%- comment -%} Main image slides {%- endcomment -%}
+      <div class="nova-gallery__main" aria-label="{{ 'products.product.media.gallery_viewer' | t }}">
+        {%- for media in product.media -%}
+          <div
+            class="nova-gallery__slide{% if media.id == featured_media.id %} is-active{% endif %}"
+            data-media-id="{{ media.id }}"
+            data-index="{{ forloop.index0 }}"
+          >
+            {%- if media.media_type == 'image' -%}
+              {%- if forloop.first -%}
+                {%- assign loading_value = 'eager' -%}
+              {%- else -%}
+                {%- assign loading_value = 'lazy' -%}
+              {%- endif -%}
+
+              {{
+                media
+                | image_url: width: 1200
+                | image_tag: loading: loading_value,
+                  widths: '400,600,800,1000,1200',
+                  sizes: '(max-width:767px) 100vw, 50vw',
+                  alt: media.alt
+                | default: product.title
+              }}
+            {%- elsif media.media_type == 'video' -%}
+              {{- media | media_tag: autoplay: false, loop: section.settings.loop_video, controls: true -}}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+
+        {%- comment -%} Prev / Next {%- endcomment -%}
+        {%- if product.media.size > 1 -%}
+          <div class="nova-gallery__arrows" aria-hidden="true">
+            <button
+              type="button"
+              class="nova-gallery__arrow"
+              id="nova-prev-{{ section.id }}"
+              aria-label="{{ 'general.slider.previous_slide' | t }}"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="nova-gallery__arrow"
+              id="nova-next-{{ section.id }}"
+              aria-label="{{ 'general.slider.next_slide' | t }}"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </button>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Thumbnail strip {%- endcomment -%}
+      {%- if product.media.size > 1 -%}
+        <div class="nova-gallery__thumbs" role="list">
+          {%- for media in product.media limit: 4 -%}
+            <button
+              type="button"
+              class="nova-gallery__thumb{% if media.id == featured_media.id %} is-active{% endif %}"
+              data-thumb-id="{{ media.id }}"
+              data-thumb-index="{{ forloop.index0 }}"
+              aria-label="{{ media.alt | default: product.title | escape }} {{ forloop.index }}"
+              role="listitem"
+            >
+              {{
+                media.preview_image
+                | image_url: width: 300
+                | image_tag: loading: 'lazy', alt: media.alt
+                | default: product.title, widths: '150,200,300'
+              }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ══════════ RIGHT: INFO ══════════ {%- endcomment -%}
+    <div class="nova-product__info">
+      <div class="nova-product__details">
+        {%- comment -%} Title + Price {%- endcomment -%}
+        <div class="nova-product__heading-group">
+          <h1 class="nova-product__title">{{ product.title }}</h1>
+
+          <div class="nova-product__price-row" id="nova-price-{{ section.id }}">
+            {%- if current_variant.compare_at_price > current_variant.price -%}
+              <span class="nova-product__price nova-product__price--sale">
+                {{ current_variant.price | money }}
+              </span>
+              <span class="nova-product__price--compare">
+                {{ current_variant.compare_at_price | money }}
+              </span>
+            {%- else -%}
+              <span class="nova-product__price">
+                {{ current_variant.price | money }}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- comment -%} Description block (if enabled) {%- endcomment -%}
+        {%- if section.settings.show_description and product.description != blank -%}
+          <div class="nova-product__description nova-option">
+            {%- if section.settings.show_description_label -%}
+              <p class="nova-option__label">{{ section.settings.description_label }}</p>
+            {%- endif -%}
+            <div>{{ product.description }}</div>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Product form {%- endcomment -%}
+        {%- form 'product', product, id: product_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" id="nova-variant-id-{{ section.id }}">
+          <input type="hidden" name="quantity" value="1" id="nova-qty-hidden-{{ section.id }}">
+
+          <div class="nova-product__options">
+            {%- comment -%} Variant option groups {%- endcomment -%}
+            {%- for option in product.options_with_values -%}
+              {%- liquid
+                assign option_name_downcase = option.name | downcase
+                assign is_color = false
+                if option_name_downcase contains 'color' or option_name_downcase contains 'colour' or option_name_downcase contains 'màu'
+                  assign is_color = true
+                endif
+              -%}
+
+              <div class="nova-option" data-option-index="{{ forloop.index0 }}">
+                <p class="nova-option__label">{{ option.name }}</p>
+                <div class="nova-option__swatches" role="group" aria-label="{{ option.name }}">
+                  {%- for value in option.values -%}
+                    {%- liquid
+                      assign value_id = 'nova-option-' | append: section.id | append: '-' | append: forloop.parentloop.index0 | append: '-' | append: forloop.index0
+                    -%}
+                    <button
+                      type="button"
+                      class="nova-swatch{% if option.selected_value == value %} is-selected{% endif %}"
+                      data-option-index="{{ forloop.parentloop.index0 }}"
+                      data-option-value="{{ value | escape }}"
+                      aria-label="{{ option.name }}: {{ value }}"
+                      {% if option.selected_value == value %}
+                        aria-pressed="true"
+                      {% else %}
+                        aria-pressed="false"
+                      {% endif %}
+                    >
+                      {{- value -}}
+                    </button>
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- endfor -%}
+
+            {%- comment -%} Quantity {%- endcomment -%}
+            <div class="nova-option">
+              <p class="nova-option__label">{{ 'products.product.quantity.label' | t | default: 'Quantity' }}</p>
+              <div
+                class="nova-qty"
+                role="group"
+                aria-label="{{ 'products.product.quantity.label' | t | default: 'Quantity' }}"
+              >
+                <button
+                  type="button"
+                  class="nova-qty__btn nova-qty__btn--minus"
+                  aria-label="{{ 'products.product.quantity.decrease' | t | default: 'Decrease quantity' }}"
+                  data-nova-qty-minus
+                >
+                  <svg viewBox="0 0 20 20">
+                    <line x1="4" y1="10" x2="16" y2="10"/>
+                  </svg>
+                </button>
+                <input
+                  type="number"
+                  class="nova-qty__input"
+                  id="nova-qty-{{ section.id }}"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  aria-label="{{ 'products.product.quantity.input_label' | t: product: product.title | default: 'Quantity' }}"
+                  data-nova-qty-input
+                >
+                <button
+                  type="button"
+                  class="nova-qty__btn nova-qty__btn--plus"
+                  aria-label="{{ 'products.product.quantity.increase' | t | default: 'Increase quantity' }}"
+                  data-nova-qty-plus
+                >
+                  <svg viewBox="0 0 20 20">
+                    <line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {%- comment -%} Return policy link {%- endcomment -%}
+            {%- if section.settings.show_policy and section.settings.policy_url != blank -%}
+              <div class="nova-product__policy">
+                <a href="{{ section.settings.policy_url }}">
+                  {{ section.settings.policy_label | default: 'Return policy' }}
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+
+          {%- comment -%} Error message {%- endcomment -%}
+          <p class="nova-product__error" id="nova-error-{{ section.id }}" role="alert" aria-live="assertive"></p>
+
+          {%- comment -%} CTA Buttons {%- endcomment -%}
+          <div class="nova-product__cta">
+            <button
+              type="submit"
+              name="add"
+              class="nova-btn nova-btn--outline"
+              id="nova-atc-{{ section.id }}"
+              {% unless current_variant.available %}
+                disabled
+              {% endunless %}
+            >
+              {%- if current_variant.available -%}
+                {{ 'products.product.add_to_cart' | t | default: 'ADD TO CART' | upcase }}
+              {%- else -%}
+                {{ 'products.product.sold_out' | t | default: 'SOLD OUT' | upcase }}
+              {%- endif -%}
+            </button>
+
+            {%- comment -%} Buy it now – uses Shopify dynamic checkout {%- endcomment -%}
+            {%- if section.settings.show_buy_now -%}
+              {{- form | payment_button -}}
+            {%- endif -%}
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{%- comment -%} Variant data for JS {%- endcomment -%}
+<script type="application/json" id="nova-variants-{{ section.id }}">
+  {{ product.variants | json }}
+</script>
+
+<script type="application/json" id="nova-media-map-{{ section.id }}">
+  {%- assign media_map = '' -%}
+  {
+    {%- for variant in product.variants -%}
+      {%- if variant.featured_media -%}
+        "{{ variant.id }}": {{ variant.featured_media.id }}{%- unless forloop.last -%},{%- endunless -%}
+      {%- endif -%}
+    {%- endfor -%}
+  }
+</script>
+
+<script>
+  (function () {
+    'use strict';
+
+    var sectionId   = '{{ section.id }}';
+    var formId      = '{{ product_form_id }}';
+    var galleryEl   = document.getElementById('nova-gallery-' + sectionId);
+    var formEl      = document.getElementById(formId);
+    var variantInput = document.getElementById('nova-variant-id-' + sectionId);
+    var priceEl     = document.getElementById('nova-price-' + sectionId);
+    var atcBtn      = document.getElementById('nova-atc-' + sectionId);
+    var errorEl     = document.getElementById('nova-error-' + sectionId);
+    var qtyInput    = formEl ? formEl.querySelector('[data-nova-qty-input]') : null;
+    var qtyHidden   = document.getElementById('nova-qty-hidden-' + sectionId);
+
+    var variants    = JSON.parse(document.getElementById('nova-variants-' + sectionId).textContent);
+    var mediaMap    = JSON.parse(document.getElementById('nova-media-map-' + sectionId).textContent);
+
+    // ── Track selected options (initialize from current variant)
+    var selectedOptions = {{ current_variant.options | json }};
+
+    // ─────────────────────────────
+    // Gallery helpers
+    // ─────────────────────────────
+    var slides      = galleryEl ? galleryEl.querySelectorAll('.nova-gallery__slide') : [];
+    var thumbs      = galleryEl ? galleryEl.querySelectorAll('.nova-gallery__thumb')  : [];
+    var prevBtn     = document.getElementById('nova-prev-' + sectionId);
+    var nextBtn     = document.getElementById('nova-next-' + sectionId);
+    var activeIndex = 0;
+    if (slides && slides.length) {
+      activeIndex = Array.prototype.findIndex.call(slides, function (s) { return s.classList.contains('is-active'); });
+      if (activeIndex === -1) activeIndex = 0;
+    }
+
+    function goToSlide(index) {
+      if (!slides.length) return;
+      index = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach(function (s, i) { s.classList.toggle('is-active', i === index); });
+      thumbs.forEach(function (t, i) { t.classList.toggle('is-active', i === index); });
+      activeIndex = index;
+      if (prevBtn) prevBtn.disabled = (index === 0);
+      if (nextBtn) nextBtn.disabled = (index === slides.length - 1);
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goToSlide(activeIndex - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goToSlide(activeIndex + 1); });
+
+    thumbs.forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        goToSlide(parseInt(this.dataset.thumbIndex, 10));
+      });
+    });
+
+    // Init arrow state
+    goToSlide(activeIndex);
+
+    // ─────────────────────────────
+    // Quantity stepper
+    // ─────────────────────────────
+    if (qtyInput) {
+      document.querySelector('[data-nova-qty-minus]').addEventListener('click', function () {
+        var v = parseInt(qtyInput.value, 10);
+        if (v > 1) { qtyInput.value = v - 1; syncQtyHidden(); }
+      });
+      document.querySelector('[data-nova-qty-plus]').addEventListener('click', function () {
+        qtyInput.value = parseInt(qtyInput.value, 10) + 1;
+        syncQtyHidden();
+      });
+      qtyInput.addEventListener('change', syncQtyHidden);
+    }
+
+    function syncQtyHidden() {
+      if (qtyHidden) qtyHidden.value = qtyInput ? qtyInput.value : 1;
+    }
+
+    // ─────────────────────────────
+    // Variant selection
+    // ─────────────────────────────
+    var swatches = formEl ? formEl.querySelectorAll('.nova-swatch') : [];
+
+    swatches.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var optionIndex = parseInt(this.dataset.optionIndex, 10);
+        var optionValue = this.dataset.optionValue;
+
+        // Update selectedOptions
+        selectedOptions[optionIndex] = optionValue;
+
+        // Update aria + active class within same group
+        formEl.querySelectorAll('.nova-swatch[data-option-index="' + optionIndex + '"]').forEach(function (b) {
+          var active = b.dataset.optionValue === optionValue;
+          b.classList.toggle('is-selected', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+
+        // Find matching variant
+        var matched = findVariant(selectedOptions);
+        updateVariant(matched);
+      });
+    });
+
+    function findVariant(opts) {
+      return variants.find(function (v) {
+        return v.options.every(function (o, i) { return o === opts[i]; });
+      }) || null;
+    }
+
+    function updateVariant(variant) {
+      if (!variant) return;
+
+      // Update hidden input
+      if (variantInput) variantInput.value = variant.id;
+
+      // Update URL without reload
+      var url = new URL(window.location.href);
+      url.searchParams.set('variant', variant.id);
+      history.replaceState({}, '', url.toString());
+
+      // Update price
+      updatePrice(variant);
+
+      // Update ATC button
+      if (atcBtn) {
+        atcBtn.disabled = !variant.available;
+        atcBtn.textContent = variant.available
+          ? '{{ "products.product.add_to_cart" | t | default: "ADD TO CART" | upcase }}'
+          : '{{ "products.product.sold_out" | t | default: "SOLD OUT" | upcase }}';
+      }
+
+      // Switch gallery to variant media
+      if (variant.featured_media) {
+        var targetSlide = galleryEl ? galleryEl.querySelector('[data-media-id="' + variant.featured_media.id + '"]') : null;
+        if (targetSlide) goToSlide(parseInt(targetSlide.dataset.index, 10));
+      }
+
+      // Mark unavailable swatches
+      updateSwatchAvailability();
+    }
+
+    function updatePrice(variant) {
+      if (!priceEl) return;
+      var html = '';
+      if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+        html = '<span class="nova-product__price nova-product__price--sale">' + formatMoney(variant.price) + '</span>'
+             + '<span class="nova-product__price--compare">' + formatMoney(variant.compare_at_price) + '</span>';
+      } else {
+        html = '<span class="nova-product__price">' + formatMoney(variant.price) + '</span>';
+      }
+      priceEl.innerHTML = html;
+    }
+
+    function formatMoney(cents) {
+      return (cents / 100).toLocaleString('en-US', { style: 'currency', currency: '{{ cart.currency.iso_code }}' });
+    }
+
+    function updateSwatchAvailability() {
+      // For each swatch, check if selecting it still yields an available variant
+      swatches.forEach(function (btn) {
+        var optIdx = parseInt(btn.dataset.optionIndex, 10);
+        var testOpts = selectedOptions.slice();
+        testOpts[optIdx] = btn.dataset.optionValue;
+        var v = findVariant(testOpts);
+        btn.classList.toggle('is-unavailable', !v || !v.available);
+      });
+    }
+
+    // Initial availability pass
+    updateSwatchAvailability();
+
+    // ─────────────────────────────
+    // AJAX Add to Cart
+    // ─────────────────────────────
+    if (formEl) {
+      formEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (atcBtn && atcBtn.disabled) return;
+
+        var qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
+
+        if (atcBtn) atcBtn.classList.add('nova-btn--loading');
+        if (errorEl) { errorEl.textContent = ''; errorEl.classList.remove('is-visible'); }
+
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          body: JSON.stringify({
+            id: parseInt(variantInput.value, 10),
+            quantity: qty
+          })
+        })
+        .then(function (res) {
+          if (!res.ok) return res.json().then(function (d) { throw new Error(d.description || 'Error adding to cart.'); });
+          return res.json();
+        })
+        .then(function () {
+          // Dispatch cart update event (works with most themes / mini-cart drawers)
+          document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+          // Update cart count if element exists
+          fetch(window.Shopify.routes.root + 'cart.js')
+            .then(function (r) { return r.json(); })
+            .then(function (cart) {
+              document.querySelectorAll('[data-cart-count], .cart-count, .header__cart-count').forEach(function (el) {
+                el.textContent = cart.item_count;
+              });
+              // nova-header badge
+              document.querySelectorAll('.nova-header__cart-badge').forEach(function (el) {
+                el.textContent = cart.item_count;
+                el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+              });
+            });
+        })
+        .catch(function (err) {
+          if (errorEl) { errorEl.textContent = err.message; errorEl.classList.add('is-visible'); }
+        })
+        .finally(function () {
+          if (atcBtn) atcBtn.classList.remove('nova-btn--loading');
+        });
+      });
+    }
+
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Detail – Nova",
+  "tag": "section",
+  "class": "nova-product-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "page_width",
+      "min": 1000,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "label": "Page width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "section_padding_v",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "section_padding_h",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "col_gap",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between columns",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#fdf8f2"
+    },
+    {
+      "type": "color",
+      "id": "color_text_primary",
+      "label": "Primary text",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "color_text_secondary",
+      "label": "Secondary text",
+      "default": "#959595"
+    },
+    {
+      "type": "color",
+      "id": "color_brand",
+      "label": "Brand / accent color",
+      "default": "#08254f"
+    },
+    {
+      "type": "color",
+      "id": "border_primary",
+      "label": "Border – default",
+      "default": "#e7e7e7"
+    },
+    {
+      "type": "color",
+      "id": "border_secondary",
+      "label": "Border – secondary",
+      "default": "#c7c7c7"
+    },
+    {
+      "type": "color",
+      "id": "color_sale",
+      "label": "Sale price color",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 28,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Product title size",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "price_font_size",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Price size",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description_label",
+      "label": "Show 'Description' label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "description_label",
+      "label": "Description label text",
+      "default": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Policy"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policy",
+      "label": "Show return policy link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "policy_label",
+      "label": "Policy link text",
+      "default": "Return policy"
+    },
+    {
+      "type": "url",
+      "id": "policy_url",
+      "label": "Policy page URL"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_now",
+      "label": "Show Buy it now button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_video",
+      "label": "Loop product videos",
+      "default": false
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Product Detail – Nova"
+    }
+  ]
+}
+{% endschema %}
