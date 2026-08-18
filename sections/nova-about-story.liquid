@@ -1,0 +1,664 @@
+{% comment %}
+  NOVA About Story
+  Figma references: desktop 4091:1316, mobile 4122:565
+{% endcomment %}
+
+{%- liquid
+  assign sec_id = 'NovaAboutStory-' | append: section.id
+  assign image_main = section.settings.image_main
+  assign image_accent = section.settings.image_accent
+  assign image_feature = section.settings.image_feature
+  assign alt_main = section.settings.image_main_alt | default: image_main.alt | escape
+  assign alt_accent = section.settings.image_accent_alt | default: image_accent.alt | escape
+  assign alt_feature = section.settings.image_feature_alt | default: image_feature.alt | escape
+  assign button_link = section.settings.button_link
+
+  if section.index <= 1
+    assign image_loading = 'eager'
+  else
+    assign image_loading = 'lazy'
+  endif
+-%}
+
+{%- style -%}
+  #{{ sec_id }} {
+    --nova-about-bg: {{ section.settings.background_color }};
+    --nova-about-heading-color: {{ section.settings.heading_color }};
+    --nova-about-body-color: {{ section.settings.body_color }};
+    --nova-about-brand: {{ section.settings.button_background }};
+    --nova-about-brand-text: {{ section.settings.button_text_color }};
+    --nova-about-button-radius: {{ section.settings.button_radius }}px;
+    --nova-about-padding-block: {{ section.settings.mobile_padding_block }}px;
+    --nova-about-padding-inline: {{ section.settings.mobile_padding_inline }}px;
+    --nova-about-padding-block-desktop: {{ section.settings.padding_block }}px;
+    --nova-about-padding-inline-desktop: {{ section.settings.padding_inline }}px;
+    --nova-about-column-gap: {{ section.settings.column_gap }}px;
+    --nova-about-stack-gap: {{ section.settings.stack_gap }}px;
+    --nova-about-text-gap: {{ section.settings.text_gap }}px;
+    --nova-about-secondary-gap: {{ section.settings.secondary_gap }}px;
+    --nova-about-details-gap: {{ section.settings.details_gap }}px;
+    --nova-about-info-width: {{ section.settings.info_max_width }}px;
+    --nova-about-content-width: {{ section.settings.content_max_width }}px;
+    --nova-about-heading-desktop: {{ section.settings.heading_size_desktop }}px;
+    --nova-about-heading-mobile: {{ section.settings.heading_size_mobile }}px;
+
+    display: block;
+    background: var(--nova-about-bg);
+    color: var(--nova-about-heading-color);
+  }
+
+  #{{ sec_id }} .nova-about__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--nova-about-padding-block) var(--nova-about-padding-inline);
+  }
+
+  #{{ sec_id }} .nova-about__grid {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-about-stack-gap);
+    width: 100%;
+    max-width: var(--nova-about-content-width);
+    margin-inline: auto;
+  }
+
+  /* Left column */
+  #{{ sec_id }} .nova-about__primary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-about-stack-gap);
+    flex: 783 1 0;
+    min-width: 0;
+    width: 100%;
+  }
+
+  #{{ sec_id }} .nova-about__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-about-text-gap);
+    width: 100%;
+    max-width: var(--nova-about-info-width);
+  }
+
+  #{{ sec_id }} .nova-about__heading {
+    margin: 0;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 300;
+    font-size: var(--nova-about-heading-mobile);
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--nova-about-heading-color);
+    overflow-wrap: break-word;
+  }
+
+  #{{ sec_id }} .nova-about__heading-line {
+    display: block;
+  }
+
+  #{{ sec_id }} .nova-about__heading em,
+  #{{ sec_id }} .nova-about__heading i {
+    font-family: 'Didot', 'Didot LT STD', 'Bodoni MT', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  #{{ sec_id }} .nova-about__description,
+  #{{ sec_id }} .nova-about__detail-text {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--nova-about-body-color);
+  }
+
+  #{{ sec_id }} .nova-about__description > p,
+  #{{ sec_id }} .nova-about__detail-text > p {
+    margin: 0;
+  }
+
+  #{{ sec_id }} .nova-about__description > p + p,
+  #{{ sec_id }} .nova-about__detail-text > p + p {
+    margin-top: 12px;
+  }
+
+  /* Collage — mobile geometry (343 x 212) */
+  #{{ sec_id }} .nova-about__collage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 343 / 212;
+  }
+
+  #{{ sec_id }} .nova-about__collage-item {
+    position: absolute;
+    overflow: hidden;
+  }
+
+  #{{ sec_id }} .nova-about__collage-item--main {
+    left: 0;
+    bottom: 0;
+    width: 57.143%;
+    height: 100%;
+  }
+
+  #{{ sec_id }} .nova-about__collage-item--accent {
+    right: 0;
+    bottom: 32.075%;
+    width: 32.653%;
+    height: 56.604%;
+  }
+
+  /* Right column */
+  #{{ sec_id }} .nova-about__secondary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-about-secondary-gap);
+    flex: 437 1 0;
+    min-width: 0;
+    width: 100%;
+  }
+
+  #{{ sec_id }} .nova-about__feature {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 343 / 375;
+    overflow: hidden;
+  }
+
+  #{{ sec_id }} .nova-about__details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-about-details-gap);
+    width: 100%;
+  }
+
+  /* Shared image leaf */
+  #{{ sec_id }} .nova-about__image,
+  #{{ sec_id }} .nova-about__placeholder {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #{{ sec_id }} .nova-about__placeholder {
+    background: #e7e3da;
+  }
+
+  /* Button */
+  #{{ sec_id }} .nova-about__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--nova-about-brand);
+    border-radius: var(--nova-about-button-radius);
+    background: var(--nova-about-brand);
+    color: var(--nova-about-brand-text);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  }
+
+  #{{ sec_id }} .nova-about__button:hover {
+    transform: translateY(-1px);
+  }
+
+  #{{ sec_id }} .nova-about__button[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  #{{ sec_id }} .nova-about__button[aria-disabled='true']:hover {
+    transform: none;
+  }
+
+  #{{ sec_id }} .nova-about__button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  #{{ sec_id }} .nova-about__button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  #{{ sec_id }} .nova-about__button-icon svg {
+    display: block;
+    width: 12px;
+    height: 9px;
+  }
+
+  /* >=750px: typography scale */
+  @media screen and (min-width: 750px) {
+    #{{ sec_id }} .nova-about__heading {
+      font-size: clamp(var(--nova-about-heading-mobile), 6vw, var(--nova-about-heading-desktop));
+    }
+
+    #{{ sec_id }} .nova-about__button {
+      padding: 12px 20px;
+      font-size: 16px;
+    }
+
+    #{{ sec_id }} .nova-about__button-icon {
+      flex-basis: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    #{{ sec_id }} .nova-about__button-icon svg {
+      width: 14px;
+      height: 10px;
+    }
+  }
+
+  /* >=990px: two-column + desktop collage geometry (783 x 522.688) */
+  @media screen and (min-width: 990px) {
+    #{{ sec_id }} .nova-about__inner {
+      padding: var(--nova-about-padding-block-desktop) var(--nova-about-padding-inline-desktop);
+    }
+
+    #{{ sec_id }} .nova-about__grid {
+      flex-direction: row;
+      align-items: flex-end;
+      gap: clamp(40px, 10.29vw, var(--nova-about-column-gap));
+    }
+
+    #{{ sec_id }} .nova-about__primary,
+    #{{ sec_id }} .nova-about__secondary {
+      width: auto;
+    }
+
+    #{{ sec_id }} .nova-about__collage {
+      aspect-ratio: 783 / 523;
+    }
+
+    #{{ sec_id }} .nova-about__collage-item--main {
+      width: 55.811%;
+      height: 90.479%;
+    }
+
+    #{{ sec_id }} .nova-about__collage-item--accent {
+      top: 0;
+      bottom: auto;
+      width: 26.309%;
+      height: 42.472%;
+    }
+
+    #{{ sec_id }} .nova-about__feature {
+      aspect-ratio: 437 / 473;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{{ sec_id }} .nova-about__button {
+      transition: none;
+    }
+  }
+{%- endstyle -%}
+
+<section
+  id="{{ sec_id }}"
+  class="nova-about"
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+>
+  <div class="nova-about__inner">
+    <div class="nova-about__grid">
+      {%- comment -%} Left column: heading + description + collage {%- endcomment -%}
+      <div class="nova-about__primary">
+        <div class="nova-about__info">
+          {%- if section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank -%}
+            {%- capture heading_content -%}
+              {%- if section.settings.heading_line_1 != blank -%}
+                <span class="nova-about__heading-line">{{ section.settings.heading_line_1 }}</span>
+              {%- endif -%}
+              {%- if section.settings.heading_line_2 != blank -%}
+                <span class="nova-about__heading-line">{{ section.settings.heading_line_2 }}</span>
+              {%- endif -%}
+            {%- endcapture -%}
+
+            {%- case section.settings.heading_tag -%}
+              {%- when 'h1' -%}
+                <h1 class="nova-about__heading">{{ heading_content }}</h1>
+              {%- when 'h3' -%}
+                <h3 class="nova-about__heading">{{ heading_content }}</h3>
+              {%- else -%}
+                <h2 class="nova-about__heading">{{ heading_content }}</h2>
+            {%- endcase -%}
+          {%- endif -%}
+
+          {%- if section.settings.description != blank -%}
+            <div class="nova-about__description">{{ section.settings.description }}</div>
+          {%- endif -%}
+        </div>
+
+        <div class="nova-about__collage">
+          <div class="nova-about__collage-item nova-about__collage-item--main">
+            {%- if image_main != blank -%}
+              {{
+                image_main
+                | image_url: width: 1200
+                | image_tag:
+                  class: 'nova-about__image',
+                  widths: '300, 437, 600, 874, 1200',
+                  sizes: '(min-width: 990px) 32vw, 57vw',
+                  loading: image_loading,
+                  alt: alt_main
+              }}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'nova-about__placeholder' }}
+            {%- endif -%}
+          </div>
+
+          <div class="nova-about__collage-item nova-about__collage-item--accent">
+            {%- if image_accent != blank -%}
+              {{
+                image_accent
+                | image_url: width: 600
+                | image_tag:
+                  class: 'nova-about__image',
+                  widths: '150, 206, 300, 412, 600',
+                  sizes: '(min-width: 990px) 15vw, 33vw',
+                  loading: 'lazy',
+                  alt: alt_accent
+              }}
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'nova-about__placeholder' }}
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} Right column: feature image + detail text + button {%- endcomment -%}
+      <div class="nova-about__secondary">
+        <div class="nova-about__feature">
+          {%- if image_feature != blank -%}
+            {{
+              image_feature
+              | image_url: width: 1200
+              | image_tag:
+                class: 'nova-about__image',
+                widths: '343, 437, 686, 874, 1200',
+                sizes: '(min-width: 990px) 31vw, 92vw',
+                loading: 'lazy',
+                alt: alt_feature
+            }}
+          {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'nova-about__placeholder' }}
+          {%- endif -%}
+        </div>
+
+        <div class="nova-about__details">
+          {%- if section.settings.detail_text != blank -%}
+            <div class="nova-about__detail-text">{{ section.settings.detail_text }}</div>
+          {%- endif -%}
+
+          {%- if section.settings.button_label != blank -%}
+            {%- if button_link != blank -%}
+              <a class="nova-about__button" href="{{ button_link }}">
+            {%- else -%}
+              <span class="nova-about__button" role="link" aria-disabled="true">
+            {%- endif -%}
+            <span>{{ section.settings.button_label | escape }}</span>
+            {%- if section.settings.show_button_arrow -%}
+              <span class="nova-about__button-icon" aria-hidden="true">
+                {{- 'icon-arrow.svg' | inline_asset_content -}}
+              </span>
+            {%- endif -%}
+            {%- if button_link != blank -%}
+              </a>
+            {%- else -%}
+              </span>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NOVA About Story",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Images" },
+    { "type": "image_picker", "id": "image_main", "label": "Collage image - large" },
+    { "type": "text", "id": "image_main_alt", "label": "Large image alt text" },
+    { "type": "image_picker", "id": "image_accent", "label": "Collage image - small" },
+    { "type": "text", "id": "image_accent_alt", "label": "Small image alt text" },
+    { "type": "image_picker", "id": "image_feature", "label": "Feature image" },
+    { "type": "text", "id": "image_feature_alt", "label": "Feature image alt text" },
+
+    { "type": "header", "content": "Content" },
+    {
+      "type": "inline_richtext",
+      "id": "heading_line_1",
+      "label": "Heading line 1",
+      "default": "From Vision",
+      "info": "Italic text uses the Didot serif face."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading_line_2",
+      "label": "Heading line 2",
+      "default": "To <em>Living Beauty</em>"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2",
+      "info": "Use H1 only when this is the main page heading."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Step inside NOVA Studio and see where ideas take shape. Our workspace is designed for creativity and precision, blending minimalist aesthetics with a sense of calm energy. Each corner, light setup, and fabric sample tells the story of dedication and elegance behind every collection.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "detail_text",
+      "label": "Detail text",
+      "default": "<p>Each item in our selection is chosen not just for its beauty, but for how it makes you feel at home.</p>"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "About NOVA"
+    },
+
+    { "type": "header", "content": "Button" },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "EXPLORE OUR PRODUCTS"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Points to the products listing page in the design."
+    },
+    { "type": "checkbox", "id": "show_button_arrow", "label": "Show arrow", "default": true },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Button corner radius",
+      "default": 0
+    },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Content maximum width",
+      "default": 1360
+    },
+    {
+      "type": "range",
+      "id": "info_max_width",
+      "min": 480,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Heading block maximum width",
+      "default": 660
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 40,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between columns",
+      "default": 140
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between text and collage",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_gap",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between heading and description",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "secondary_gap",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between feature image and details",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "details_gap",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between detail text and button",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop vertical padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_block",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile vertical padding",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_inline",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile horizontal padding",
+      "default": 16
+    },
+
+    { "type": "header", "content": "Typography" },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop heading size",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 20,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile heading size",
+      "default": 32
+    },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#fdf8f2" },
+    { "type": "color", "id": "heading_color", "label": "Heading", "default": "#1d1d1d" },
+    { "type": "color", "id": "body_color", "label": "Body text", "default": "#959595" },
+    { "type": "color", "id": "button_background", "label": "Button background", "default": "#08254f" },
+    { "type": "color", "id": "button_text_color", "label": "Button text", "default": "#ffffff" }
+  ],
+  "presets": [{ "name": "NOVA About Story" }],
+  "disabled_on": { "groups": ["header", "footer"] }
+}
+{% endschema %}

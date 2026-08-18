@@ -11,13 +11,262 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "disabled": true,
       "settings": {
         "padding_top": 28,
         "padding_bottom": 28
       }
+    },
+    "nova_about_hero_6KHYNe": {
+      "type": "nova-about-hero",
+      "name": "NOVA About Hero",
+      "settings": {
+        "desktop_image": "shopify://shop_images/809904fc19bbd2cdc05d6a5d816237565d6ad2e8_5c689974-e751-47e7-a4ed-945636644065.png",
+        "image_alt": "",
+        "heading": "<em>Spirit</em> of NOVA",
+        "heading_tag": "h1",
+        "description": "<p>Minimalist elegance. Crafted for real women. Behind every stitch, a story of style and individuality</p>",
+        "button_label": "EXPLORE THE LOOKBOOK",
+        "button_link": "",
+        "show_button_arrow": true,
+        "accessibility_label": "About NOVA",
+        "content_alignment": "center",
+        "vertical_position": "center",
+        "desktop_height": 696,
+        "mobile_height": 480,
+        "content_max_width": 980,
+        "mobile_side_padding": 16,
+        "text_gap": 24,
+        "content_gap": 40,
+        "heading_size_desktop": 120,
+        "heading_size_mobile": 56,
+        "overlay_color": "#000000",
+        "overlay_opacity": 40,
+        "text_color": "#ffffff",
+        "button_background": "#ffffff",
+        "button_text_color": "#08254f",
+        "button_radius": 0
+      }
+    },
+    "nova_craft_collection_7Jdmgh": {
+      "type": "nova-craft-collection",
+      "blocks": {
+        "highlight_kPnPDB": {
+          "type": "highlight",
+          "settings": {
+            "value": "12 Years",
+            "text": "<p>Of crafting design rooted in beauty and experience.</p>"
+          }
+        },
+        "highlight_p4NFei": {
+          "type": "highlight",
+          "settings": {
+            "value": "500+",
+            "text": "<p>Curated Pieces with endless styles, one timeless purpose.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "highlight_kPnPDB",
+        "highlight_p4NFei"
+      ],
+      "name": "NOVA Craft & Collection",
+      "settings": {
+        "image": "shopify://shop_images/de7a1bf4735534e5e3004d33771a5606a262f37d.png",
+        "image_alt": "",
+        "heading": "Our <em>Craft</em> & Collection",
+        "heading_tag": "h2",
+        "description": "<p>Step inside NOVA Studio and see where ideas take shape. Our workspace is designed for creativity and precision, blending minimalist aesthetics with a sense of calm energy. Each corner, light setup, and fabric sample tells the story of dedication and elegance behind every collection.</p>",
+        "accessibility_label": "Our craft and collection",
+        "primary_button_label": "SHOP NOW",
+        "primary_button_link": "shopify://collections/all",
+        "show_button_arrow": true,
+        "secondary_button_label": "READ OUR BLOGS",
+        "secondary_button_link": "shopify://blogs/news",
+        "button_radius": 0,
+        "reverse_layout": false,
+        "content_max_width": 660,
+        "image_min_height": 540,
+        "image_min_height_mobile": 360,
+        "column_gap": 24,
+        "stack_gap": 40,
+        "text_gap": 24,
+        "padding_block": 80,
+        "padding_inline": 40,
+        "mobile_padding_block": 48,
+        "mobile_padding_inline": 16,
+        "heading_size_desktop": 80,
+        "heading_size_mobile": 40,
+        "stat_size_desktop": 40,
+        "stat_size_mobile": 32,
+        "background_color": "#fdf8f2",
+        "heading_color": "#1d1d1d",
+        "body_color": "#959595",
+        "primary_button_background": "#08254f",
+        "primary_button_text_color": "#ffffff",
+        "secondary_button_color": "#08254f",
+        "divider_color": "#e7e7e7"
+      }
+    },
+    "nova_about_story_BQyEPh": {
+      "type": "nova-about-story",
+      "name": "NOVA About Story",
+      "settings": {
+        "image_main": "shopify://shop_images/92ba48e6a99d1f28cd57af74bd39445efee0af41.png",
+        "image_main_alt": "",
+        "image_accent": "shopify://shop_images/0bc6e62cae2f89635ec209b97a48c82598fb1461.png",
+        "image_accent_alt": "",
+        "image_feature": "shopify://shop_images/9344ad8c6f2a8619d2dfa96d64398d2399235e34.png",
+        "image_feature_alt": "",
+        "heading_line_1": "From Vision",
+        "heading_line_2": "To <em>Living Beauty</em>",
+        "heading_tag": "h2",
+        "description": "<p>Step inside NOVA Studio and see where ideas take shape. Our workspace is designed for creativity and precision, blending minimalist aesthetics with a sense of calm energy. Each corner, light setup, and fabric sample tells the story of dedication and elegance behind every collection.</p>",
+        "detail_text": "<p>Each item in our selection is chosen not just for its beauty, but for how it makes you feel at home.</p>",
+        "accessibility_label": "About NOVA",
+        "button_label": "EXPLORE OUR PRODUCTS",
+        "button_link": "shopify://collections/all",
+        "show_button_arrow": true,
+        "button_radius": 0,
+        "content_max_width": 1360,
+        "info_max_width": 660,
+        "column_gap": 140,
+        "stack_gap": 40,
+        "text_gap": 24,
+        "secondary_gap": 64,
+        "details_gap": 20,
+        "padding_block": 80,
+        "padding_inline": 40,
+        "mobile_padding_block": 56,
+        "mobile_padding_inline": 16,
+        "heading_size_desktop": 80,
+        "heading_size_mobile": 32,
+        "background_color": "#fdf8f2",
+        "heading_color": "#1d1d1d",
+        "body_color": "#959595",
+        "button_background": "#08254f",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "nova_team_members_RBADKF": {
+      "type": "nova-team-members",
+      "blocks": {
+        "member_cM4Vd6": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/e75797b33cbafc0227dbed724f8b7a56de5888ea.png",
+            "image_alt": "",
+            "name": "LOREMP IMSUM",
+            "role": "CEO"
+          }
+        },
+        "member_NgB7VU": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/6c7480cc0b7b1197c879690de79936f74743fbcd.png",
+            "image_alt": "",
+            "name": "LOREMP IMSUM",
+            "role": "Design Leader"
+          }
+        },
+        "member_ry6bTz": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/2b49a38b2bd3bb8f1ed0c151077ff959b5710d2a.png",
+            "image_alt": "",
+            "name": "LOREMP IMSUM",
+            "role": "Marketing Leader"
+          }
+        },
+        "member_RyJMV7": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/cbf5b8c8e458fc8a00f7cd17de7236388d078e42.png",
+            "image_alt": "",
+            "name": "LOREMP IMSUM",
+            "role": "Marketing Leader"
+          }
+        },
+        "member_hTfecr": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/b49b991f2d7dc311312e6bb9891e1d9601223925.png",
+            "image_alt": "",
+            "name": "LOREMP IMSUM",
+            "role": "Marketing Leader"
+          }
+        }
+      },
+      "block_order": [
+        "member_cM4Vd6",
+        "member_NgB7VU",
+        "member_ry6bTz",
+        "member_RyJMV7",
+        "member_hTfecr"
+      ],
+      "name": "NOVA Team Members",
+      "settings": {
+        "heading": "People of <em>NOVA</em>",
+        "heading_tag": "h2",
+        "description": "<p>Meet the team that drives our vision. From designers to stylists to photographers, every person at NOVA contributes to a shared philosophy of thoughtful design, creativity, and celebration of individuality.</p>",
+        "accessibility_label": "People of NOVA",
+        "track_label": "Team members, scroll horizontally",
+        "card_width": 322,
+        "card_width_mobile": 300,
+        "media_height": 490,
+        "media_height_mobile": 340,
+        "card_gap": 24,
+        "media_gap": 24,
+        "details_gap": 12,
+        "section_gap": 64,
+        "header_gap": 16,
+        "description_max_width": 600,
+        "padding_block": 80,
+        "padding_inline": 40,
+        "mobile_padding_block": 56,
+        "mobile_padding_inline": 24,
+        "heading_size_desktop": 80,
+        "heading_size_mobile": 32,
+        "name_size": 20,
+        "role_size": 20,
+        "background_color": "#fdf8f2",
+        "heading_color": "#0a0a0a",
+        "description_color": "#959595",
+        "name_color": "#0a0a0a",
+        "role_color": "#0a0a0a"
+      }
+    },
+    "custom_style_club_GJTMke": {
+      "type": "custom-style-club",
+      "name": "Custom Style Club",
+      "settings": {
+        "section_height": 800,
+        "padding_top": 160,
+        "padding_bottom": 160,
+        "bg_image": "shopify://shop_images/1050102bd54cb793933847313ea1e2b6cc9f837b.png",
+        "overlay_opacity": 60,
+        "overlay_fade": 50,
+        "heading_italic": "Join",
+        "heading_rest": "Our Style Club",
+        "subheading": "Unlock exclusive perks, early access to launches, and special birthday surprises.",
+        "text_color": "#ffffff",
+        "input_placeholder": "Enter your Email",
+        "input_border_color": "#e7e7e7",
+        "input_text_color": "#0a0a0a",
+        "btn_label": "SUBSCRIBE",
+        "btn_bg_color": "#ffffff",
+        "btn_text_color": "#08254f",
+        "customer_tag": "newsletter-style-club",
+        "success_message": "Thank you for subscribing!"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "nova_about_hero_6KHYNe",
+    "nova_craft_collection_7Jdmgh",
+    "nova_about_story_BQyEPh",
+    "nova_team_members_RBADKF",
+    "custom_style_club_GJTMke"
   ]
 }

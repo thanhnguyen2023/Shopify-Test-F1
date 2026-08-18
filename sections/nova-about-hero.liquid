@@ -1,0 +1,574 @@
+{% comment %}
+  NOVA About hero
+  Figma references: desktop 4105:509, mobile 4122:540
+{% endcomment %}
+
+{%- liquid
+  assign hero_id = 'NovaAboutHero-' | append: section.id
+  assign desktop_image = section.settings.desktop_image | default: section.settings.mobile_image
+  assign mobile_image = section.settings.mobile_image | default: desktop_image
+  assign image_alt = section.settings.image_alt | default: desktop_image.alt | escape
+  assign button_link = section.settings.button_link
+  assign desktop_focal_point = desktop_image.presentation.focal_point | default: 'center center'
+  assign mobile_focal_point = mobile_image.presentation.focal_point | default: desktop_focal_point
+
+  if section.index <= 1
+    assign image_loading = 'eager'
+    assign image_fetchpriority = 'high'
+  else
+    assign image_loading = 'lazy'
+    assign image_fetchpriority = 'auto'
+  endif
+-%}
+
+{%- style -%}
+  #{{ hero_id }} {
+    --nova-hero-desktop-height: {{ section.settings.desktop_height }}px;
+    --nova-hero-mobile-height: {{ section.settings.mobile_height }}px;
+    --nova-hero-heading-desktop: {{ section.settings.heading_size_desktop }}px;
+    --nova-hero-heading-mobile: {{ section.settings.heading_size_mobile }}px;
+    --nova-hero-content-width: {{ section.settings.content_max_width }}px;
+    --nova-hero-mobile-padding: {{ section.settings.mobile_side_padding }}px;
+    --nova-hero-text-gap: {{ section.settings.text_gap }}px;
+    --nova-hero-content-gap: {{ section.settings.content_gap }}px;
+    --nova-hero-overlay: {{ section.settings.overlay_color }};
+    --nova-hero-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --nova-hero-text: {{ section.settings.text_color }};
+    --nova-hero-button-bg: {{ section.settings.button_background }};
+    --nova-hero-button-text: {{ section.settings.button_text_color }};
+    --nova-hero-button-radius: {{ section.settings.button_radius }}px;
+    --nova-hero-image-position-desktop: {{ desktop_focal_point }};
+    --nova-hero-image-position-mobile: {{ mobile_focal_point }};
+    position: relative;
+    min-height: var(--nova-hero-mobile-height);
+    overflow: hidden;
+    isolation: isolate;
+    background: #6f706b;
+    color: var(--nova-hero-text);
+  }
+
+  #{{ hero_id }} .nova-about-hero__media,
+  #{{ hero_id }} .nova-about-hero__picture,
+  #{{ hero_id }} .nova-about-hero__image,
+  #{{ hero_id }} .nova-about-hero__placeholder,
+  #{{ hero_id }} .nova-about-hero__overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #{{ hero_id }} .nova-about-hero__picture {
+    display: block;
+  }
+
+  #{{ hero_id }} .nova-about-hero__image,
+  #{{ hero_id }} .nova-about-hero__placeholder {
+    display: block;
+    object-fit: cover;
+    object-position: var(--nova-hero-image-position-mobile);
+  }
+
+  #{{ hero_id }} .nova-about-hero__placeholder {
+    background: #8a8a84;
+  }
+
+  #{{ hero_id }} .nova-about-hero__overlay {
+    z-index: 1;
+    background: var(--nova-hero-overlay);
+    opacity: var(--nova-hero-overlay-opacity);
+    pointer-events: none;
+  }
+
+  #{{ hero_id }} .nova-about-hero__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    min-height: var(--nova-hero-mobile-height);
+    padding: 32px var(--nova-hero-mobile-padding);
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #{{ hero_id }}.nova-about-hero--vertical-top .nova-about-hero__inner {
+    align-items: flex-start;
+  }
+
+  #{{ hero_id }}.nova-about-hero--vertical-bottom .nova-about-hero__inner {
+    align-items: flex-end;
+  }
+
+  #{{ hero_id }} .nova-about-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-hero-content-gap);
+    width: min(100%, var(--nova-hero-content-width));
+    text-align: center;
+  }
+
+  #{{ hero_id }}.nova-about-hero--align-left .nova-about-hero__content {
+    align-items: flex-start;
+    text-align: left;
+    margin-right: auto;
+  }
+
+  #{{ hero_id }}.nova-about-hero--align-right .nova-about-hero__content {
+    align-items: flex-end;
+    text-align: right;
+    margin-left: auto;
+  }
+
+  #{{ hero_id }} .nova-about-hero__text {
+    display: flex;
+    flex-direction: column;
+    align-items: inherit;
+    gap: var(--nova-hero-text-gap);
+    width: 100%;
+  }
+
+  #{{ hero_id }} .nova-about-hero__heading {
+    width: 100%;
+    margin: 0;
+    color: inherit;
+    font-family: 'Satoshi', sans-serif;
+    font-size: var(--nova-hero-heading-mobile);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+
+  #{{ hero_id }} .nova-about-hero__heading em {
+    font-family: 'Didot', 'Didot LT STD', 'Bodoni MT', Georgia, serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  #{{ hero_id }} .nova-about-hero__description {
+    width: min(100%, 460px);
+    color: inherit;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  #{{ hero_id }} .nova-about-hero__description p {
+    margin: 0;
+  }
+
+  #{{ hero_id }} .nova-about-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 8px 12px;
+    border-radius: var(--nova-hero-button-radius);
+    background: var(--nova-hero-button-bg);
+    color: var(--nova-hero-button-text);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  }
+
+  #{{ hero_id }} .nova-about-hero__button:hover {
+    transform: translateY(-1px);
+  }
+
+  #{{ hero_id }} .nova-about-hero__button[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  #{{ hero_id }} .nova-about-hero__button[aria-disabled='true']:hover {
+    transform: none;
+  }
+
+  #{{ hero_id }} .nova-about-hero__button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  #{{ hero_id }} .nova-about-hero__button-icon {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 20px;
+  }
+
+  #{{ hero_id }} .nova-about-hero__button-icon svg {
+    width: 12px;
+    height: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    #{{ hero_id }},
+    #{{ hero_id }} .nova-about-hero__inner {
+      min-height: var(--nova-hero-desktop-height);
+    }
+
+    #{{ hero_id }} .nova-about-hero__inner {
+      padding: 64px 40px;
+    }
+
+    #{{ hero_id }} .nova-about-hero__image,
+    #{{ hero_id }} .nova-about-hero__placeholder {
+      object-position: var(--nova-hero-image-position-desktop);
+    }
+
+    #{{ hero_id }} .nova-about-hero__heading {
+      font-size: clamp(var(--nova-hero-heading-mobile), 8.333vw, var(--nova-hero-heading-desktop));
+    }
+
+    #{{ hero_id }} .nova-about-hero__button {
+      min-height: 48px;
+      padding: 12px 20px;
+      font-size: 16px;
+    }
+
+    #{{ hero_id }} .nova-about-hero__button-icon {
+      width: 24px;
+      height: 24px;
+      flex-basis: 24px;
+    }
+
+    #{{ hero_id }} .nova-about-hero__button-icon svg {
+      width: 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{{ hero_id }} .nova-about-hero__button {
+      transition: none;
+    }
+  }
+{%- endstyle -%}
+
+<section
+  id="{{ hero_id }}"
+  class="nova-about-hero nova-about-hero--align-{{ section.settings.content_alignment }} nova-about-hero--vertical-{{ section.settings.vertical_position }}"
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+>
+  <div class="nova-about-hero__media">
+    {%- if desktop_image != blank -%}
+      <picture class="nova-about-hero__picture">
+        {%- if mobile_image != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {{ mobile_image | image_url: width: 375 }} 375w,
+              {{ mobile_image | image_url: width: 550 }} 550w,
+              {{ mobile_image | image_url: width: 750 }} 750w
+            "
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {{
+          desktop_image
+          | image_url: width: 2880
+          | image_tag:
+            class: 'nova-about-hero__image',
+            widths: '750, 1100, 1440, 1920, 2400, 2880',
+            sizes: '100vw',
+            loading: image_loading,
+            fetchpriority: image_fetchpriority,
+            alt: image_alt
+        }}
+      </picture>
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'nova-about-hero__placeholder' }}
+    {%- endif -%}
+    <div class="nova-about-hero__overlay"></div>
+  </div>
+
+  <div class="nova-about-hero__inner">
+    <div class="nova-about-hero__content">
+      <div class="nova-about-hero__text">
+        {%- if section.settings.heading != blank -%}
+          {%- if section.settings.heading_tag == 'h1' -%}
+            <h1 class="nova-about-hero__heading">{{ section.settings.heading }}</h1>
+          {%- else -%}
+            <h2 class="nova-about-hero__heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="nova-about-hero__description">{{ section.settings.description }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.button_label != blank -%}
+        {%- if button_link != blank -%}
+          <a class="nova-about-hero__button" href="{{ button_link }}">
+        {%- else -%}
+          <span class="nova-about-hero__button" role="link" aria-disabled="true">
+        {%- endif -%}
+          <span>{{ section.settings.button_label | escape }}</span>
+          {%- if section.settings.show_button_arrow -%}
+            <span class="nova-about-hero__button-icon" aria-hidden="true">
+              {{- 'icon-arrow.svg' | inline_asset_content -}}
+            </span>
+          {%- endif -%}
+        {%- if button_link != blank -%}
+          </a>
+        {%- else -%}
+          </span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NOVA About Hero",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Falls back to the desktop image when empty."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "info": "Leave empty to use the image alt text from Shopify."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<em>Spirit</em> of NOVA"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h2",
+      "info": "Use H1 only when this is the main page heading."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Minimalist elegance. Crafted for real women. Behind every stitch, a story of style and individuality</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "EXPLORE THE LOOKBOOK"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button_arrow",
+      "label": "Show button arrow",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "About NOVA"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "vertical_position",
+      "label": "Vertical position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "min": 480,
+      "max": 896,
+      "step": 8,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 696
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "min": 360,
+      "max": 720,
+      "step": 8,
+      "unit": "px",
+      "label": "Mobile height",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 600,
+      "max": 1100,
+      "step": 20,
+      "unit": "px",
+      "label": "Content maximum width",
+      "default": 980
+    },
+    {
+      "type": "range",
+      "id": "mobile_side_padding",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile side padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_gap",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Heading and description gap",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "min": 16,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Text and button gap",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 56,
+      "max": 144,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop heading size",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 32,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile heading size",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#08254f"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Button corner radius",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "NOVA About Hero"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

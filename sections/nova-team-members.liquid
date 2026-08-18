@@ -1,0 +1,573 @@
+{% comment %}
+  NOVA Team Members
+  Figma references: desktop 4107:610, mobile 4122:580
+{% endcomment %}
+
+{%- liquid
+  assign sec_id = 'NovaTeamMembers-' | append: section.id
+-%}
+
+{%- style -%}
+  #{{ sec_id }} {
+    --nova-team-bg: {{ section.settings.background_color }};
+    --nova-team-heading-color: {{ section.settings.heading_color }};
+    --nova-team-description-color: {{ section.settings.description_color }};
+    --nova-team-name-color: {{ section.settings.name_color }};
+    --nova-team-role-color: {{ section.settings.role_color }};
+    --nova-team-padding-block: {{ section.settings.mobile_padding_block }}px;
+    --nova-team-padding-inline: {{ section.settings.mobile_padding_inline }}px;
+    --nova-team-padding-block-desktop: {{ section.settings.padding_block }}px;
+    --nova-team-padding-inline-desktop: {{ section.settings.padding_inline }}px;
+    --nova-team-section-gap: {{ section.settings.section_gap }}px;
+    --nova-team-header-gap: {{ section.settings.header_gap }}px;
+    --nova-team-card-gap: {{ section.settings.card_gap }}px;
+    --nova-team-media-gap: {{ section.settings.media_gap }}px;
+    --nova-team-details-gap: {{ section.settings.details_gap }}px;
+    --nova-team-card-width: {{ section.settings.card_width_mobile }}px;
+    --nova-team-card-width-desktop: {{ section.settings.card_width }}px;
+    --nova-team-media-height: {{ section.settings.media_height_mobile }}px;
+    --nova-team-media-height-desktop: {{ section.settings.media_height }}px;
+    --nova-team-description-width: {{ section.settings.description_max_width }}px;
+    --nova-team-heading-mobile: {{ section.settings.heading_size_mobile }}px;
+    --nova-team-heading-desktop: {{ section.settings.heading_size_desktop }}px;
+    --nova-team-name-size: {{ section.settings.name_size }}px;
+    --nova-team-role-size: {{ section.settings.role_size }}px;
+
+    display: block;
+    background: var(--nova-team-bg);
+  }
+
+  #{{ sec_id }} .nova-team__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nova-team-section-gap);
+    padding: var(--nova-team-padding-block) var(--nova-team-padding-inline);
+  }
+
+  /* Header */
+  #{{ sec_id }} .nova-team__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-team-header-gap);
+    align-self: stretch;
+    text-align: center;
+  }
+
+  #{{ sec_id }} .nova-team__heading {
+    margin: 0;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--nova-team-heading-mobile);
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--nova-team-heading-color);
+    overflow-wrap: break-word;
+  }
+
+  #{{ sec_id }} .nova-team__heading em,
+  #{{ sec_id }} .nova-team__heading i {
+    font-family: 'Didot', 'Didot LT STD', 'Bodoni MT', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  #{{ sec_id }} .nova-team__description {
+    width: 100%;
+    max-width: var(--nova-team-description-width);
+    margin-inline: auto;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--nova-team-description-color);
+  }
+
+  #{{ sec_id }} .nova-team__description > p {
+    margin: 0;
+  }
+
+  #{{ sec_id }} .nova-team__description > p + p {
+    margin-top: 12px;
+  }
+
+  /* Scroll track - full-bleed so cards run to the viewport edge */
+  #{{ sec_id }} .nova-team__track {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nova-team-card-gap);
+    align-self: stretch;
+    margin-inline: calc(-1 * var(--nova-team-padding-inline));
+    padding-inline: var(--nova-team-padding-inline);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: var(--nova-team-padding-inline);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  #{{ sec_id }} .nova-team__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  #{{ sec_id }} .nova-team__track:focus-visible {
+    outline: 2px solid var(--nova-team-heading-color);
+    outline-offset: 4px;
+  }
+
+  /* Card */
+  #{{ sec_id }} .nova-team__card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-team-media-gap);
+    flex: 0 0 var(--nova-team-card-width);
+    width: var(--nova-team-card-width);
+    scroll-snap-align: start;
+  }
+
+  #{{ sec_id }} .nova-team__media {
+    position: relative;
+    width: 100%;
+    height: var(--nova-team-media-height);
+    overflow: hidden;
+  }
+
+  #{{ sec_id }} .nova-team__image,
+  #{{ sec_id }} .nova-team__placeholder {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--nova-team-focal, center center);
+  }
+
+  #{{ sec_id }} .nova-team__placeholder {
+    background: #e7e3da;
+  }
+
+  #{{ sec_id }} .nova-team__details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-team-details-gap);
+    width: 100%;
+    padding-block: 8px;
+  }
+
+  #{{ sec_id }} .nova-team__name {
+    margin: 0;
+    width: 100%;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 500;
+    font-size: var(--nova-team-name-size);
+    line-height: 1.5;
+    color: var(--nova-team-name-color);
+    overflow-wrap: break-word;
+  }
+
+  #{{ sec_id }} .nova-team__role {
+    margin: 0;
+    width: 100%;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: var(--nova-team-role-size);
+    line-height: 1.1;
+    color: var(--nova-team-role-color);
+    overflow-wrap: break-word;
+  }
+
+  /* >=750px: typography scale */
+  @media screen and (min-width: 750px) {
+    #{{ sec_id }} .nova-team__heading {
+      font-size: clamp(var(--nova-team-heading-mobile), 6vw, var(--nova-team-heading-desktop));
+    }
+  }
+
+  /* >=990px: desktop card metrics */
+  @media screen and (min-width: 990px) {
+    #{{ sec_id }} .nova-team__inner {
+      padding: var(--nova-team-padding-block-desktop) var(--nova-team-padding-inline-desktop);
+    }
+
+    #{{ sec_id }} .nova-team__track {
+      margin-inline: calc(-1 * var(--nova-team-padding-inline-desktop));
+      padding-inline: var(--nova-team-padding-inline-desktop);
+      scroll-padding-inline-start: var(--nova-team-padding-inline-desktop);
+    }
+
+    #{{ sec_id }} .nova-team__card {
+      flex-basis: var(--nova-team-card-width-desktop);
+      width: var(--nova-team-card-width-desktop);
+    }
+
+    #{{ sec_id }} .nova-team__media {
+      height: var(--nova-team-media-height-desktop);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{{ sec_id }} .nova-team__track {
+      scroll-behavior: auto;
+      scroll-snap-type: none;
+    }
+  }
+{%- endstyle -%}
+
+<section
+  id="{{ sec_id }}"
+  class="nova-team"
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+>
+  <div class="nova-team__inner">
+    {%- if section.settings.heading != blank or section.settings.description != blank -%}
+      <div class="nova-team__header">
+        {%- if section.settings.heading != blank -%}
+          {%- case section.settings.heading_tag -%}
+            {%- when 'h1' -%}
+              <h1 class="nova-team__heading">{{ section.settings.heading }}</h1>
+            {%- when 'h3' -%}
+              <h3 class="nova-team__heading">{{ section.settings.heading }}</h3>
+            {%- else -%}
+              <h2 class="nova-team__heading">{{ section.settings.heading }}</h2>
+          {%- endcase -%}
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="nova-team__description">{{ section.settings.description }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div
+        class="nova-team__track"
+        role="region"
+        aria-label="{{ section.settings.track_label | escape }}"
+        tabindex="0"
+      >
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign member_image = block.settings.image
+            assign member_alt = block.settings.image_alt | default: block.settings.name | default: member_image.alt | escape
+            assign focal_point = member_image.presentation.focal_point | default: 'center center'
+
+            if forloop.index <= 2
+              assign card_loading = 'eager'
+            else
+              assign card_loading = 'lazy'
+            endif
+          -%}
+
+          <div class="nova-team__card" {{ block.shopify_attributes }}>
+            <div class="nova-team__media" style="--nova-team-focal: {{ focal_point }};">
+              {%- if member_image != blank -%}
+                {{
+                  member_image
+                  | image_url: width: 1000
+                  | image_tag:
+                    class: 'nova-team__image',
+                    widths: '300, 322, 480, 600, 644, 800, 1000',
+                    sizes: '(min-width: 990px) 322px, 300px',
+                    loading: card_loading,
+                    alt: member_alt
+                }}
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'nova-team__placeholder' }}
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.name != blank or block.settings.role != blank -%}
+              <div class="nova-team__details">
+                {%- if block.settings.name != blank -%}
+                  <p class="nova-team__name">{{ block.settings.name | escape }}</p>
+                {%- endif -%}
+                {%- if block.settings.role != blank -%}
+                  <p class="nova-team__role">{{ block.settings.role | escape }}</p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NOVA Team Members",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "People of <em>NOVA</em>",
+      "info": "Italic text uses the Didot serif face; the rest is Satoshi Light italic."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2",
+      "info": "Use H1 only when this is the main page heading."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Meet the team that drives our vision. From designers to stylists to photographers, every person at NOVA contributes to a shared philosophy of thoughtful design, creativity, and celebration of individuality.</p>"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Section accessibility label",
+      "default": "People of NOVA"
+    },
+    {
+      "type": "text",
+      "id": "track_label",
+      "label": "Carousel accessibility label",
+      "default": "Team members, scroll horizontally",
+      "info": "Read out when keyboard users focus the scrollable row."
+    },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "range",
+      "id": "card_width",
+      "min": 240,
+      "max": 420,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop card width",
+      "default": 322
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "min": 200,
+      "max": 340,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile card width",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "media_height",
+      "min": 320,
+      "max": 640,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop image height",
+      "default": 490
+    },
+    {
+      "type": "range",
+      "id": "media_height_mobile",
+      "min": 220,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile image height",
+      "default": 340
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "media_gap",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between image and text",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "details_gap",
+      "min": 4,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between name and role",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between header and cards",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "min": 4,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between heading and description",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "description_max_width",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Description maximum width",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop vertical padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_block",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile vertical padding",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_inline",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile horizontal padding",
+      "default": 24
+    },
+
+    { "type": "header", "content": "Typography" },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop heading size",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 20,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile heading size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Name size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "role_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Role size",
+      "default": 20
+    },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#fdf8f2" },
+    { "type": "color", "id": "heading_color", "label": "Heading", "default": "#0a0a0a" },
+    { "type": "color", "id": "description_color", "label": "Description", "default": "#959595" },
+    { "type": "color", "id": "name_color", "label": "Name", "default": "#0a0a0a" },
+    { "type": "color", "id": "role_color", "label": "Role", "default": "#0a0a0a" }
+  ],
+  "blocks": [
+    {
+      "type": "member",
+      "name": "Team member",
+      "limit": 12,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Photo alt text",
+          "info": "Falls back to the name, then the alt text from Shopify."
+        },
+        { "type": "text", "id": "name", "label": "Name", "default": "LOREMP IMSUM" },
+        { "type": "text", "id": "role", "label": "Role", "default": "Marketing Leader" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "NOVA Team Members",
+      "blocks": [
+        { "type": "member", "settings": { "name": "LOREMP IMSUM", "role": "CEO" } },
+        { "type": "member", "settings": { "name": "LOREMP IMSUM", "role": "Design Leader" } },
+        { "type": "member", "settings": { "name": "LOREMP IMSUM", "role": "Marketing Leader" } },
+        { "type": "member", "settings": { "name": "LOREMP IMSUM", "role": "Marketing Leader" } },
+        { "type": "member", "settings": { "name": "LOREMP IMSUM", "role": "Marketing Leader" } }
+      ]
+    }
+  ],
+  "disabled_on": { "groups": ["header", "footer"] }
+}
+{% endschema %}

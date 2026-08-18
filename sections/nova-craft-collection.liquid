@@ -1,0 +1,772 @@
+{% comment %}
+  NOVA Craft & Collection
+  Figma reference: 4088:776 (desktop)
+{% endcomment %}
+
+{%- liquid
+  assign sec_id = 'NovaCraftCollection-' | append: section.id
+  assign image = section.settings.image
+  assign image_alt = section.settings.image_alt | default: image.alt | escape
+  assign image_focal_point = image.presentation.focal_point | default: 'center center'
+  assign primary_link = section.settings.primary_button_link
+  assign secondary_link = section.settings.secondary_button_link
+
+  if section.index <= 1
+    assign image_loading = 'eager'
+    assign image_fetchpriority = 'high'
+  else
+    assign image_loading = 'lazy'
+    assign image_fetchpriority = 'auto'
+  endif
+-%}
+
+{%- style -%}
+  #{{ sec_id }} {
+    --nova-craft-bg: {{ section.settings.background_color }};
+    --nova-craft-text-primary: {{ section.settings.heading_color }};
+    --nova-craft-text-secondary: {{ section.settings.body_color }};
+    --nova-craft-brand: {{ section.settings.primary_button_background }};
+    --nova-craft-brand-text: {{ section.settings.primary_button_text_color }};
+    --nova-craft-outline: {{ section.settings.secondary_button_color }};
+    --nova-craft-divider: {{ section.settings.divider_color }};
+    --nova-craft-button-radius: {{ section.settings.button_radius }}px;
+    --nova-craft-padding-block: {{ section.settings.mobile_padding_block }}px;
+    --nova-craft-padding-inline: {{ section.settings.mobile_padding_inline }}px;
+    --nova-craft-padding-block-desktop: {{ section.settings.padding_block }}px;
+    --nova-craft-padding-inline-desktop: {{ section.settings.padding_inline }}px;
+    --nova-craft-column-gap: {{ section.settings.column_gap }}px;
+    --nova-craft-stack-gap: {{ section.settings.stack_gap }}px;
+    --nova-craft-text-gap: {{ section.settings.text_gap }}px;
+    --nova-craft-content-width: {{ section.settings.content_max_width }}px;
+    --nova-craft-heading-desktop: {{ section.settings.heading_size_desktop }}px;
+    --nova-craft-heading-mobile: {{ section.settings.heading_size_mobile }}px;
+    --nova-craft-stat-desktop: {{ section.settings.stat_size_desktop }}px;
+    --nova-craft-stat-mobile: {{ section.settings.stat_size_mobile }}px;
+    --nova-craft-image-height: {{ section.settings.image_min_height_mobile }}px;
+    --nova-craft-image-height-desktop: {{ section.settings.image_min_height }}px;
+    --nova-craft-image-position: {{ image_focal_point }};
+
+    display: block;
+    background: var(--nova-craft-bg);
+    color: var(--nova-craft-text-primary);
+  }
+
+  #{{ sec_id }} .nova-craft__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nova-craft-column-gap);
+    padding: var(--nova-craft-padding-block) var(--nova-craft-padding-inline);
+  }
+
+  /* Media */
+  #{{ sec_id }} .nova-craft__media {
+    position: relative;
+    flex: 1 1 auto;
+    align-self: stretch;
+    min-width: 0;
+    min-height: var(--nova-craft-image-height);
+    overflow: hidden;
+  }
+
+  #{{ sec_id }} .nova-craft__image,
+  #{{ sec_id }} .nova-craft__placeholder {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--nova-craft-image-position);
+  }
+
+  #{{ sec_id }} .nova-craft__placeholder {
+    background: #e7e3da;
+  }
+
+  /* Content column */
+  #{{ sec_id }} .nova-craft__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-craft-stack-gap);
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+  }
+
+  #{{ sec_id }} .nova-craft__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-craft-text-gap);
+    width: 100%;
+  }
+
+  #{{ sec_id }} .nova-craft__heading {
+    margin: 0;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 300;
+    font-size: var(--nova-craft-heading-mobile);
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--nova-craft-text-primary);
+    overflow-wrap: break-word;
+  }
+
+  #{{ sec_id }} .nova-craft__heading em,
+  #{{ sec_id }} .nova-craft__heading i {
+    font-family: 'Didot', 'Didot LT STD', 'Bodoni MT', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  #{{ sec_id }} .nova-craft__description {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--nova-craft-text-secondary);
+  }
+
+  #{{ sec_id }} .nova-craft__description > p {
+    margin: 0;
+  }
+
+  #{{ sec_id }} .nova-craft__description > p + p {
+    margin-top: 12px;
+  }
+
+  /* Buttons */
+  #{{ sec_id }} .nova-craft__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--nova-craft-text-gap);
+  }
+
+  #{{ sec_id }} .nova-craft__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid transparent;
+    border-radius: var(--nova-craft-button-radius);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  }
+
+  #{{ sec_id }} .nova-craft__button--primary {
+    background: var(--nova-craft-brand);
+    border-color: var(--nova-craft-brand);
+    color: var(--nova-craft-brand-text);
+  }
+
+  #{{ sec_id }} .nova-craft__button--secondary {
+    background: transparent;
+    border-color: var(--nova-craft-outline);
+    color: var(--nova-craft-outline);
+  }
+
+  #{{ sec_id }} .nova-craft__button:hover {
+    transform: translateY(-1px);
+  }
+
+  #{{ sec_id }} .nova-craft__button[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  #{{ sec_id }} .nova-craft__button[aria-disabled='true']:hover {
+    transform: none;
+  }
+
+  #{{ sec_id }} .nova-craft__button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  #{{ sec_id }} .nova-craft__button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  #{{ sec_id }} .nova-craft__button-icon svg {
+    display: block;
+    width: 12px;
+    height: 9px;
+  }
+
+  /* Highlights */
+  #{{ sec_id }} .nova-craft__highlights {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--nova-craft-text-gap);
+    width: 100%;
+  }
+
+  #{{ sec_id }} .nova-craft__highlight {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  #{{ sec_id }} .nova-craft__highlight + .nova-craft__highlight {
+    padding-block-start: var(--nova-craft-text-gap);
+    border-block-start: 1px solid var(--nova-craft-divider);
+  }
+
+  #{{ sec_id }} .nova-craft__highlight-value {
+    margin: 0;
+    font-family: 'Didot', 'Didot LT STD', 'Bodoni MT', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--nova-craft-stat-mobile);
+    line-height: 1.1;
+    color: var(--nova-craft-text-primary);
+  }
+
+  #{{ sec_id }} .nova-craft__highlight-text {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--nova-craft-text-secondary);
+  }
+
+  #{{ sec_id }} .nova-craft__highlight-text > p {
+    margin: 0;
+  }
+
+  /* >=750px: typography + horizontal rhythm */
+  @media screen and (min-width: 750px) {
+    #{{ sec_id }} .nova-craft__heading {
+      font-size: clamp(var(--nova-craft-heading-mobile), 5.5vw, var(--nova-craft-heading-desktop));
+    }
+
+    #{{ sec_id }} .nova-craft__button {
+      padding: 12px 20px;
+      font-size: 16px;
+    }
+
+    #{{ sec_id }} .nova-craft__button-icon {
+      flex-basis: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    #{{ sec_id }} .nova-craft__button-icon svg {
+      width: 14px;
+      height: 10px;
+    }
+
+    #{{ sec_id }} .nova-craft__highlights {
+      flex-direction: row;
+      align-items: stretch;
+    }
+
+    #{{ sec_id }} .nova-craft__highlight-value {
+      font-size: var(--nova-craft-stat-desktop);
+    }
+
+    #{{ sec_id }} .nova-craft__highlight + .nova-craft__highlight {
+      padding-block-start: 0;
+      border-block-start: 0;
+      padding-inline-start: var(--nova-craft-text-gap);
+      border-inline-start: 1px solid var(--nova-craft-divider);
+    }
+  }
+
+  /* >=990px: two-column layout */
+  @media screen and (min-width: 990px) {
+    #{{ sec_id }} .nova-craft__inner {
+      flex-direction: row;
+      align-items: center;
+      padding: var(--nova-craft-padding-block-desktop) var(--nova-craft-padding-inline-desktop);
+    }
+
+    #{{ sec_id }}.nova-craft--reverse .nova-craft__inner {
+      flex-direction: row-reverse;
+    }
+
+    #{{ sec_id }} .nova-craft__media {
+      flex: 1 1 0;
+      min-height: var(--nova-craft-image-height-desktop);
+    }
+
+    #{{ sec_id }} .nova-craft__content {
+      flex: 1 1 var(--nova-craft-content-width);
+      max-width: var(--nova-craft-content-width);
+      width: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{{ sec_id }} .nova-craft__button {
+      transition: none;
+    }
+  }
+{%- endstyle -%}
+
+<section
+  id="{{ sec_id }}"
+  class="nova-craft{% if section.settings.reverse_layout %} nova-craft--reverse{% endif %}"
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+>
+  <div class="nova-craft__inner">
+    <div class="nova-craft__media">
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 1600
+          | image_tag:
+            class: 'nova-craft__image',
+            widths: '375, 550, 750, 990, 1200, 1440, 1600',
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            loading: image_loading,
+            fetchpriority: image_fetchpriority,
+            alt: image_alt
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'nova-craft__placeholder' }}
+      {%- endif -%}
+    </div>
+
+    <div class="nova-craft__content">
+      <div class="nova-craft__text">
+        {%- if section.settings.heading != blank -%}
+          {%- case section.settings.heading_tag -%}
+            {%- when 'h1' -%}
+              <h1 class="nova-craft__heading">{{ section.settings.heading }}</h1>
+            {%- when 'h3' -%}
+              <h3 class="nova-craft__heading">{{ section.settings.heading }}</h3>
+            {%- else -%}
+              <h2 class="nova-craft__heading">{{ section.settings.heading }}</h2>
+          {%- endcase -%}
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="nova-craft__description">{{ section.settings.description }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.primary_button_label != blank or section.settings.secondary_button_label != blank -%}
+          <div class="nova-craft__actions">
+            {%- if section.settings.primary_button_label != blank -%}
+              {%- if primary_link != blank -%}
+                <a class="nova-craft__button nova-craft__button--primary" href="{{ primary_link }}">
+              {%- else -%}
+                <span class="nova-craft__button nova-craft__button--primary" role="link" aria-disabled="true">
+              {%- endif -%}
+                <span>{{ section.settings.primary_button_label | escape }}</span>
+                {%- if section.settings.show_button_arrow -%}
+                  <span class="nova-craft__button-icon" aria-hidden="true">
+                    {{- 'icon-arrow.svg' | inline_asset_content -}}
+                  </span>
+                {%- endif -%}
+              {%- if primary_link != blank -%}
+                </a>
+              {%- else -%}
+                </span>
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- if section.settings.secondary_button_label != blank -%}
+              {%- if secondary_link != blank -%}
+                <a class="nova-craft__button nova-craft__button--secondary" href="{{ secondary_link }}">
+              {%- else -%}
+                <span class="nova-craft__button nova-craft__button--secondary" role="link" aria-disabled="true">
+              {%- endif -%}
+                <span>{{ section.settings.secondary_button_label | escape }}</span>
+              {%- if secondary_link != blank -%}
+                </a>
+              {%- else -%}
+                </span>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="nova-craft__highlights">
+          {%- for block in section.blocks -%}
+            <div class="nova-craft__highlight" {{ block.shopify_attributes }}>
+              {%- if block.settings.value != blank -%}
+                <p class="nova-craft__highlight-value">{{ block.settings.value | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <div class="nova-craft__highlight-text">{{ block.settings.text }}</div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NOVA Craft & Collection",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "info": "Leave empty to use the alt text from Shopify."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our <em>Craft</em> & Collection",
+      "info": "Text wrapped in italic uses the Didot serif face."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2",
+      "info": "Use H1 only when this is the main page heading."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Step inside NOVA Studio and see where ideas take shape. Our workspace is designed for creativity and precision, blending minimalist aesthetics with a sense of calm energy. Each corner, light setup, and fabric sample tells the story of dedication and elegance behind every collection.</p>"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Our craft and collection"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Primary button label",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary button link",
+      "info": "Points to the products page in the design."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button_arrow",
+      "label": "Show arrow on primary button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary button label",
+      "default": "READ OUR BLOGS"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link",
+      "info": "Points to the blog page in the design."
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Button corner radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_layout",
+      "label": "Place image on the right",
+      "default": false,
+      "info": "Desktop only. On mobile the image always sits above the text."
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 480,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Text column maximum width",
+      "default": 660
+    },
+    {
+      "type": "range",
+      "id": "image_min_height",
+      "min": 320,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Desktop image minimum height",
+      "default": 540
+    },
+    {
+      "type": "range",
+      "id": "image_min_height_mobile",
+      "min": 220,
+      "max": 640,
+      "step": 20,
+      "unit": "px",
+      "label": "Mobile image height",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between image and text",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between text and highlights",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_gap",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between text elements",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop vertical padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_block",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile vertical padding",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_inline",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile horizontal padding",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop heading size",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile heading size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "stat_size_desktop",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop highlight value size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "stat_size_mobile",
+      "min": 20,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile highlight value size",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#fdf8f2"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading and highlight value",
+      "default": "#1d1d1d"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body text",
+      "default": "#959595"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_background",
+      "label": "Primary button background",
+      "default": "#08254f"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_text_color",
+      "label": "Primary button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_color",
+      "label": "Secondary button border and text",
+      "default": "#08254f"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Highlight divider",
+      "default": "#e7e7e7"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight",
+      "name": "Highlight",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "12 Years"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Of crafting design rooted in beauty and experience.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "NOVA Craft & Collection",
+      "blocks": [
+        {
+          "type": "highlight",
+          "settings": {
+            "value": "12 Years",
+            "text": "<p>Of crafting design rooted in beauty and experience.</p>"
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "value": "500+",
+            "text": "<p>Curated Pieces with endless styles, one timeless purpose.</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
